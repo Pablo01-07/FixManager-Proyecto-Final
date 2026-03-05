@@ -1,0 +1,42 @@
+[
+    {
+        "id": "cat_1",
+        "title": "Laptops",
+        "icon": "laptop"
+    },
+    {
+        "id": "cat_2",
+        "title": "Celulares",
+        "icon": "cellphone"
+    },
+    {
+        "id": "cat_3",
+        "title": "Tablets",
+        "icon": "tablet"
+    },
+    {
+        "id": "cat_4",
+        "title": "Monitores",
+        "icon": "monitor"
+    },
+    {
+        "id": "cat_5",
+        "title": "Impresoras",
+        "icon": "printer"
+    },
+    {
+        "id": "cat_6",
+        "title": "Periféricos",
+        "icon": "mouse"
+    },
+    {
+        "id": "cat_7",
+        "title": "Muebles de Melamina / Escritorio",
+        "icon": "desk"
+    },
+    {
+        "id": "cat_8",
+        "title": "Cajonera",
+        "icon": "archive-outline"
+    }
+]

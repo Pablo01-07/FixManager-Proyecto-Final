@@ -1,0 +1,1 @@
+export const FIREBASE_DB_URL = "https://fixmanager-app-coder-default-rtdb.firebaseio.com/"

@@ -1,0 +1,307 @@
+[
+    {
+        "id": 1,
+        "title": "MacBook Pro M2 - IT-001",
+        "description": "El equipo se apaga repentinamente cuando llega al 20% de batería. Sobrecalentamiento en la parte inferior.",
+        "category": "Laptops",
+        "price": 2499.99,
+        "discountPercentage": 0,
+        "rating": 4.5,
+        "stock": 1,
+        "tags": [
+            "laptop",
+            "apple",
+            "bateria"
+        ],
+        "brand": "Apple",
+        "sku": "LAP-001",
+        "weight": 2,
+        "dimensions": {
+            "width": 31.2,
+            "height": 1.5,
+            "depth": 22.1
+        },
+        "warrantyInformation": "Expired",
+        "shippingInformation": "Local Office",
+        "availabilityStatus": "En reparación",
+        "reviews": [],
+        "returnPolicy": "N/A",
+        "minimumOrderQuantity": 1,
+        "meta": {
+            "createdAt": "2024-01-15T09:00:00Z",
+            "updatedAt": "2024-02-20T10:00:00Z",
+            "barcode": "75010001",
+            "qrCode": ""
+        },
+        "images": [
+            "https://m.media-amazon.com/images/I/71cZWwc6ZOL._AC_SL1500_.jpg"
+        ],
+        "thumbnail": "https://m.media-amazon.com/images/I/71cZWwc6ZOL._AC_SL1500_.jpg"
+    },
+    {
+        "id": 2,
+        "title": "Samsung S23 Ultra - IT-042",
+        "description": "Pantalla con línea verde vertical y el táctil no responde en la zona inferior derecha.",
+        "category": "Celulares",
+        "price": 1199.00,
+        "discountPercentage": 0,
+        "rating": 3.8,
+        "stock": 1,
+        "tags": [
+            "celular",
+            "samsung",
+            "pantalla"
+        ],
+        "brand": "Samsung",
+        "sku": "CEL-042",
+        "weight": 1,
+        "dimensions": {
+            "width": 7.8,
+            "height": 16.3,
+            "depth": 0.8
+        },
+        "warrantyInformation": "In Warranty",
+        "shippingInformation": "Local Office",
+        "availabilityStatus": "Averiado",
+        "reviews": [],
+        "returnPolicy": "N/A",
+        "meta": {
+            "createdAt": "2024-01-15T09:00:00Z",
+            "updatedAt": "2024-02-20T10:00:00Z",
+            "barcode": "75010002",
+            "qrCode": ""
+        },
+        "images": [
+            "https://www.peru-smart.com/wp-content/uploads/2023/08/CELU559VERDE-256GB.jpg"
+        ],
+        "thumbnail": "https://www.peru-smart.com/wp-content/uploads/2023/08/CELU559VERDE-256GB.jpg"
+    },
+    {
+        "id": 3,
+        "title": "iPad Air - IT-088",
+        "description": "Puerto de carga USB-C flojo. Solo carga si se mantiene el cable en una posición específica.",
+        "category": "Tablets",
+        "price": 599.00,
+        "discountPercentage": 0,
+        "rating": 4.0,
+        "stock": 1,
+        "tags": [
+            "tablet",
+            "apple",
+            "carga"
+        ],
+        "brand": "Apple",
+        "sku": "TAB-088",
+        "weight": 1,
+        "dimensions": {
+            "width": 17.8,
+            "height": 24.7,
+            "depth": 0.6
+        },
+        "warrantyInformation": "Expired",
+        "shippingInformation": "Local Office",
+        "availabilityStatus": "Averiado",
+        "reviews": [],
+        "returnPolicy": "N/A",
+        "meta": {
+            "createdAt": "2024-01-15T09:00:00Z",
+            "updatedAt": "2024-02-20T10:00:00Z",
+            "barcode": "75010003",
+            "qrCode": ""
+        },
+        "images": [
+            "https://pe.tiendasishop.com/cdn/shop/files/IMG-16741406_2e79b0b1-f363-49b1-a06f-04f00ee8f13b.jpg?v=1741104449&width=823"
+        ],
+        "thumbnail": "https://pe.tiendasishop.com/cdn/shop/files/IMG-16741406_2e79b0b1-f363-49b1-a06f-04f00ee8f13b.jpg?v=1741104449&width=823"
+    },
+    {
+        "id": 4,
+        "title": "Monitor LG 27'' - IT-105",
+        "description": "Falla de retroiluminación. La mitad izquierda de la pantalla se ve más oscura que la derecha.",
+        "category": "Monitores",
+        "price": 300.00,
+        "discountPercentage": 0,
+        "rating": 3.0,
+        "stock": 1,
+        "tags": [
+            "monitor",
+            "lg",
+            "imagen"
+        ],
+        "brand": "LG",
+        "sku": "MON-105",
+        "weight": 5,
+        "dimensions": {
+            "width": 61.4,
+            "height": 36.4,
+            "depth": 4.5
+        },
+        "warrantyInformation": "No Warranty",
+        "shippingInformation": "Sede Central",
+        "availabilityStatus": "Dañado",
+        "reviews": [],
+        "returnPolicy": "N/A",
+        "meta": {
+            "createdAt": "2024-01-15T09:00:00Z",
+            "updatedAt": "2024-02-20T10:00:00Z",
+            "barcode": "75010004",
+            "qrCode": ""
+        },
+        "images": [
+            "https://oechsle.vtexassets.com/arquivos/ids/20353068/imageUrl_1.jpg?v=638728835488800000"
+        ],
+        "thumbnail": "https://oechsle.vtexassets.com/arquivos/ids/20353068/imageUrl_1.jpg?v=638728835488800000"
+    },
+    {
+        "id": 5,
+        "title": "HP LaserJet Pro - IT-210",
+        "description": "Atasco de papel constante en el rodillo de salida. Ruido extraño al intentar traccionar las hojas.",
+        "category": "Impresoras",
+        "price": 450.00,
+        "discountPercentage": 0,
+        "rating": 3.5,
+        "stock": 1,
+        "tags": [
+            "impresora",
+            "hp",
+            "mecanico"
+        ],
+        "brand": "HP",
+        "sku": "PRN-210",
+        "weight": 12,
+        "dimensions": {
+            "width": 42.0,
+            "height": 30.0,
+            "depth": 40.0
+        },
+        "warrantyInformation": "In Warranty",
+        "shippingInformation": "Sede Central",
+        "availabilityStatus": "Requiere mantenimiento",
+        "reviews": [],
+        "returnPolicy": "N/A",
+        "meta": {
+            "createdAt": "2024-01-15T09:00:00Z",
+            "updatedAt": "2024-02-20T10:00:00Z",
+            "barcode": "75010005",
+            "qrCode": ""
+        },
+        "images": [
+            "https://liontecperu.com/wp-content/uploads/2024/02/HP-LASERJET-M201DW-1.jpg"
+        ],
+        "thumbnail": "https://liontecperu.com/wp-content/uploads/2024/02/HP-LASERJET-M201DW-1.jpg"
+    },
+    {
+        "id": 6,
+        "title": "Teclado Mecánico - IT-305",
+        "description": "La tecla 'Enter' y la barra espaciadora no funcionan. Posible derrame de líquido.",
+        "category": "Periféricos",
+        "price": 80.00,
+        "discountPercentage": 0,
+        "rating": 2.5,
+        "stock": 1,
+        "tags": [
+            "periferico",
+            "teclado",
+            "daño"
+        ],
+        "brand": "Logitech",
+        "sku": "PER-305",
+        "weight": 1,
+        "dimensions": {
+            "width": 45.0,
+            "height": 3.0,
+            "depth": 15.0
+        },
+        "warrantyInformation": "No Warranty",
+        "shippingInformation": "Local Office",
+        "availabilityStatus": "Averiado",
+        "reviews": [],
+        "returnPolicy": "N/A",
+        "meta": {
+            "createdAt": "2024-01-15T09:00:00Z",
+            "updatedAt": "2024-02-20T10:00:00Z",
+            "barcode": "75010006",
+            "qrCode": ""
+        },
+        "images": [
+            "https://plazavea.vteximg.com.br/arquivos/ids/30310119-418-418/imageUrl_1.jpg"
+        ],
+        "thumbnail": "https://plazavea.vteximg.com.br/arquivos/ids/30310119-418-418/imageUrl_1.jpg"
+    },
+    {
+        "id": 7,
+        "title": "Escritorio Melamina - MUE-01",
+        "description": "El borde frontal de melamina se está desprendiendo. Una de las patas está inestable.",
+        "category": "Muebles de Melamina / Escritorio",
+        "price": 150.00,
+        "discountPercentage": 0,
+        "rating": 3.0,
+        "stock": 1,
+        "tags": [
+            "mueble",
+            "melamina",
+            "fisico"
+        ],
+        "brand": "OfiModerna",
+        "sku": "MUE-01",
+        "weight": 30,
+        "dimensions": {
+            "width": 120.0,
+            "height": 75.0,
+            "depth": 60.0
+        },
+        "warrantyInformation": "N/A",
+        "shippingInformation": "Sede Central",
+        "availabilityStatus": "Dañado",
+        "reviews": [],
+        "returnPolicy": "N/A",
+        "meta": {
+            "createdAt": "2024-01-15T09:00:00Z",
+            "updatedAt": "2024-02-20T10:00:00Z",
+            "barcode": "75010007",
+            "qrCode": ""
+        },
+        "images": [
+            "https://estilooficina.com/wp-content/uploads/2021/09/ESCRITORIO-GERENTE-MELAMINA-600x600.jpg"
+        ],
+        "thumbnail": "https://estilooficina.com/wp-content/uploads/2021/09/ESCRITORIO-GERENTE-MELAMINA-600x600.jpg"
+    },
+    {
+        "id": 8,
+        "title": "Cajonera Oficina - CAJ-15",
+        "description": "Cerradura trabada. La llave no gira y el segundo cajón no abre completamente.",
+        "category": "Cajonera",
+        "price": 90.00,
+        "discountPercentage": 0,
+        "rating": 3.2,
+        "stock": 1,
+        "tags": [
+            "cajonera",
+            "metal",
+            "cerradura"
+        ],
+        "brand": "OfiModerna",
+        "sku": "CAJ-15",
+        "weight": 15,
+        "dimensions": {
+            "width": 40.0,
+            "height": 60.0,
+            "depth": 50.0
+        },
+        "warrantyInformation": "N/A",
+        "shippingInformation": "Sede Central",
+        "availabilityStatus": "Fuera de servicio",
+        "reviews": [],
+        "returnPolicy": "N/A",
+        "meta": {
+            "createdAt": "2024-01-15T09:00:00Z",
+            "updatedAt": "2024-02-20T10:00:00Z",
+            "barcode": "75010008",
+            "qrCode": ""
+        },
+        "images": [
+            "https://nihmdesign.com/wp-content/uploads/2024/07/NP-CAJ-L3-001.jpg"
+        ],
+        "thumbnail": "https://nihmdesign.com/wp-content/uploads/2024/07/NP-CAJ-L3-001.jpg"
+    }
+]
