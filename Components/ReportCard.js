@@ -4,25 +4,28 @@ import { useNavigation } from "@react-navigation/native"
 import { useDispatch } from "react-redux"
 import { deleteReport } from "../store/slices/reportsSlice"
 import { deleteAsset } from "../store/slices/assetsSlice"
+import { useDeleteReportMutation, useDeleteAssetMutation } from "../services/firebaseApi"
 import { MaterialIcons } from "@expo/vector-icons"
 
 export default function ReportCard({ report }) {
-
     const navigation = useNavigation();
     const dispatch = useDispatch();
+
+    const [deleteReportFirebase] = useDeleteReportMutation();
+    const [deleteAssetFirebase] = useDeleteAssetMutation();
 
     const getStatusColor = () => {
         switch (report.status) {
             case "Pendiente":
-                return "#FF9500";
+                return "#FF9500"
             case "En proceso":
-                return "#007AFF";
+                return "#007AFF"
             case "Resuelto":
-                return "#34C759";
+                return "#34C759"
             default:
-                return "#999";
+                return "#999"
         }
-    };
+    }
 
     const handleDelete = () => {
         Alert.alert(
@@ -33,19 +36,33 @@ export default function ReportCard({ report }) {
                 {
                     text: "Eliminar",
                     style: "destructive",
-                    onPress: () => {
-                        dispatch(deleteReport(report.id));
-                        dispatch(deleteAsset(report.assetId));
+                    onPress: async () => {
+                        try {
+                            await deleteReportFirebase(report.firebaseKey)
+
+                            if (report.assetFirebaseKey) {
+                                await deleteAssetFirebase(report.assetFirebaseKey)
+                            }
+                            dispatch(deleteReport(report.id))
+                            dispatch(deleteAsset(report.assetId))
+
+                        } catch (error) {
+                            console.log(error)
+                            Alert.alert("Error eliminando reporte")
+                        }
                     }
                 }
             ]
-        );
-    };
+        )
+    }
 
     return (
         <TouchableOpacity
             style={styles.card}
-            onPress={() => navigation.navigate("ReportDetail", { report })}
+            onPress={() =>
+                navigation.navigate("ReportDetail", { report })
+            }
+            activeOpacity={0.9}
         >
 
             <TouchableOpacity
@@ -57,7 +74,9 @@ export default function ReportCard({ report }) {
 
             <View style={styles.info}>
 
-                <Text style={styles.title}>{report.title}</Text>
+                <Text style={styles.title}>
+                    {report.title}
+                </Text>
 
                 <Text style={styles.brand}>
                     Marca: {report.brand}
@@ -73,15 +92,17 @@ export default function ReportCard({ report }) {
                         { backgroundColor: getStatusColor() }
                     ]}
                 >
+
                     <Text style={styles.statusText}>
                         {report.status}
                     </Text>
+
                 </View>
 
             </View>
 
         </TouchableOpacity>
-    );
+    )
 }
 
 const styles = StyleSheet.create({

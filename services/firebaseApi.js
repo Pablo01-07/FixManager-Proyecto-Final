@@ -30,6 +30,14 @@ export const firebaseApi = createApi({
             providesTags: ["Assets"]
         }),
 
+        deleteAsset: builder.mutation({
+            query: (firebaseKey) => ({
+                url: `assets/${firebaseKey}.json`,
+                method: "DELETE"
+            }),
+            invalidatesTags: ["Assets"]
+        }),
+
         addReport: builder.mutation({
             query: (newReport) => ({
                 url: "reports.json",
@@ -60,6 +68,14 @@ export const firebaseApi = createApi({
             providesTags: ["Reports"]
         }),
 
+        deleteReport: builder.mutation({
+            query: (firebaseKey) => ({
+                url: `reports/${firebaseKey}.json`,
+                method: "DELETE"
+            }),
+            invalidatesTags: ["Reports"]
+        }),
+
         getCategories: builder.query({
             query: () => "categories.json",
             transformResponse: (response) =>
@@ -73,4 +89,13 @@ export const firebaseApi = createApi({
     })
 })
 
-export const { useGetAssetsQuery, useGetReportsQuery, useGetCategoriesQuery, useAddAssetMutation, useAddReportMutation, useUpdateReportMutation } = firebaseApi
+export const {
+    useGetAssetsQuery,
+    useGetReportsQuery,
+    useGetCategoriesQuery,
+    useAddAssetMutation,
+    useAddReportMutation,
+    useUpdateReportMutation,
+    useDeleteReportMutation,
+    useDeleteAssetMutation
+} = firebaseApi;

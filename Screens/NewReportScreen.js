@@ -5,22 +5,20 @@ import { Picker } from "@react-native-picker/picker"
 import { useGetCategoriesQuery, useGetAssetsQuery, useGetReportsQuery, useAddAssetMutation, useAddReportMutation } from "../services/firebaseApi"
 
 export default function NewReportScreen({ navigation }) {
-    const { data: assets = [] } = useGetAssetsQuery();
-    const { data: reports = [] } = useGetReportsQuery();
-    const { data: categories = [], isLoading } = useGetCategoriesQuery();
+    const { data: assets = [] } = useGetAssetsQuery()
+    const { data: reports = [] } = useGetReportsQuery()
+    const { data: categories = [], isLoading } = useGetCategoriesQuery()
 
-    const [addAssetFirebase] = useAddAssetMutation();
-    const [addReportFirebase] = useAddReportMutation();
+    const [addAssetFirebase] = useAddAssetMutation()
+    const [addReportFirebase] = useAddReportMutation()
 
-    const newReportId = reports.length + 1;
-
-    const [title, setTitle] = useState("");
-    const [brand, setBrand] = useState("");
-    const [description, setDescription] = useState("");
-    const [category, setCategory] = useState("");
-    const [assetStatus, setAssetStatus] = useState("Operativo");
-    const [location, setLocation] = useState("");
-    const [image, setImage] = useState(null);
+    const [title, setTitle] = useState("")
+    const [brand, setBrand] = useState("")
+    const [description, setDescription] = useState("")
+    const [category, setCategory] = useState("")
+    const [assetStatus, setAssetStatus] = useState("Operativo")
+    const [location, setLocation] = useState("")
+    const [image, setImage] = useState(null)
 
     const assetStatuses = [
         "Operativo",
@@ -29,55 +27,54 @@ export default function NewReportScreen({ navigation }) {
         "Dañado",
         "Requiere mantenimiento",
         "Fuera de servicio"
-    ];
+    ]
 
     useEffect(() => {
         if (categories.length > 0 && !category) {
-            setCategory(categories[0].title);
+            setCategory(categories[0].title)
         }
-    }, [categories]);
+    }, [categories])
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 1
-        });
+        })
 
         if (!result.canceled) {
-            setImage(result.assets[0].uri);
+            setImage(result.assets[0].uri)
         }
-    };
+    }
 
     const takePhoto = async () => {
-        const permission = await ImagePicker.requestCameraPermissionsAsync();
+        const permission = await ImagePicker.requestCameraPermissionsAsync()
 
         if (!permission.granted) {
-            Alert.alert("Permiso requerido", "Debes permitir acceso a la cámara");
-            return;
+            Alert.alert("Permiso requerido", "Debes permitir acceso a la cámara")
+            return
         }
 
         const result = await ImagePicker.launchCameraAsync({
             quality: 1
-        });
+        })
 
         if (!result.canceled) {
-            setImage(result.assets[0].uri);
+            setImage(result.assets[0].uri)
         }
-    };
+    }
 
     const handleSubmit = async () => {
-
         if (!title || !brand || !description || !location) {
-            Alert.alert("Error", "Todos los campos son obligatorios");
-            return;
+            Alert.alert("Error", "Todos los campos son obligatorios")
+            return
         }
 
         const lastAssetId =
             assets.length > 0
                 ? Math.max(...assets.map(a => a.id))
-                : 0;
+                : 0
 
-        const newAssetId = lastAssetId + 1;
+        const newAssetId = lastAssetId + 1
 
         const newAsset = {
             id: newAssetId,
@@ -87,31 +84,40 @@ export default function NewReportScreen({ navigation }) {
             availabilityStatus: assetStatus,
             shippingInformation: location,
             thumbnail: image
-        };
-
-        const newReport = {
-            id: reports.length + 1,
-            assetId: newAssetId,
-            title,
-            brand,
-            description,
-            category,
-            status: "Pendiente",
-            date: new Date().toISOString()
-        };
+        }
 
         try {
-            await addAssetFirebase(newAsset).unwrap();
-            await addReportFirebase(newReport).unwrap();
+            const assetResponse = await addAssetFirebase(newAsset).unwrap()
+            const assetFirebaseKey = assetResponse.name
 
-            Alert.alert("Reporte creado correctamente");
-            navigation.goBack();
+            const newReport = {
+                id: reports.length + 1,
+                assetId: newAssetId,
+                assetFirebaseKey: assetFirebaseKey,
+                title,
+                brand,
+                description,
+                category,
+                status: "Pendiente",
+                history: [
+                    {
+                        from: null,
+                        to: "Pendiente",
+                        date: new Date().toISOString()
+                    }
+                ],
+                date: new Date().toISOString()
+            }
+
+            await addReportFirebase(newReport).unwrap()
+            Alert.alert("Reporte creado correctamente")
+            navigation.goBack()
 
         } catch (error) {
-            console.log(error);
-            Alert.alert("Error al guardar en Firebase");
+            console.log(error)
+            Alert.alert("Error al guardar en Firebase")
         }
-    };
+    }
 
     if (isLoading) {
         return <Text style={{ padding: 20 }}>Cargando categorías...</Text>
@@ -120,12 +126,14 @@ export default function NewReportScreen({ navigation }) {
     const lastAssetId =
         assets.length > 0
             ? Math.max(...assets.map(a => a.id))
-            : 0;
+            : 0
 
-    const newAssetId = lastAssetId + 1;
+    const newAssetId = lastAssetId + 1
+    const newReportId = reports.length + 1
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+
             <Text style={styles.title}>Nuevo Reporte</Text>
 
             <Text>ID Reporte: {newReportId}</Text>
@@ -143,7 +151,6 @@ export default function NewReportScreen({ navigation }) {
                 style={styles.input}
                 value={brand}
                 onChangeText={setBrand}
-                placeholder="Ej: HP, Lenovo, Dell..."
             />
 
             <Text>Descripción</Text>
@@ -155,11 +162,13 @@ export default function NewReportScreen({ navigation }) {
             />
 
             <Text>Categoría</Text>
+
             <Picker
                 selectedValue={category}
                 onValueChange={(itemValue) => setCategory(itemValue)}
                 style={styles.input}
             >
+
                 {categories.map(cat => (
                     <Picker.Item
                         key={cat.id}
@@ -167,14 +176,17 @@ export default function NewReportScreen({ navigation }) {
                         value={cat.title}
                     />
                 ))}
+
             </Picker>
 
             <Text>Estado del Asset</Text>
+
             <Picker
                 selectedValue={assetStatus}
                 onValueChange={(itemValue) => setAssetStatus(itemValue)}
                 style={styles.input}
             >
+
                 {assetStatuses.map(status => (
                     <Picker.Item
                         key={status}
@@ -182,32 +194,49 @@ export default function NewReportScreen({ navigation }) {
                         value={status}
                     />
                 ))}
+
             </Picker>
 
             <Text>Ubicación</Text>
+
             <TextInput
                 style={styles.input}
                 value={location}
                 onChangeText={setLocation}
             />
 
-            <TouchableOpacity style={styles.imageButton} onPress={pickImage}>
+            <TouchableOpacity
+                style={styles.imageButton}
+                onPress={pickImage}
+            >
                 <Text>Seleccionar imagen</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.imageButton} onPress={takePhoto}>
+            <TouchableOpacity
+                style={styles.imageButton}
+                onPress={takePhoto}
+            >
                 <Text>Tomar foto</Text>
             </TouchableOpacity>
 
             {image && (
-                <Image source={{ uri: image }} style={styles.preview} />
+                <Image
+                    source={{ uri: image }}
+                    style={styles.preview}
+                />
             )}
 
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Guardar</Text>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={handleSubmit}
+            >
+                <Text style={styles.buttonText}>
+                    Guardar
+                </Text>
             </TouchableOpacity>
+
         </ScrollView>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
