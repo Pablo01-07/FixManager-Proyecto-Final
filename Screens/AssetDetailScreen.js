@@ -13,7 +13,6 @@ export default function AssetDetailScreen({ route }) {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-
             <Image source={{ uri: asset.thumbnail }} style={styles.image} />
             <Text style={styles.title}>{asset.title}</Text>
             <Text>Marca: {asset.brand}</Text>
@@ -28,7 +27,6 @@ export default function AssetDetailScreen({ route }) {
                     ))}
                 </>
             )}
-
         </ScrollView>
     );
 }

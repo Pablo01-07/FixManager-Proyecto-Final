@@ -92,7 +92,6 @@ export default function ReportDetailScreen({ route }) {
                             Alert.alert("Error actualizando estado");
 
                         }
-
                     }
                 }
             ]
@@ -122,7 +121,6 @@ export default function ReportDetailScreen({ route }) {
 
     return (
         <View style={{ flex: 1, backgroundColor: "#F2F2F2" }}>
-
             <Header
                 title="Detalle del Reporte"
                 showBack
@@ -187,9 +185,7 @@ export default function ReportDetailScreen({ route }) {
                         </Text>
                     </View>
                 ))}
-
             </ScrollView>
-
         </View>
     );
 }

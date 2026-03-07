@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { FIREBASE_DB_URL } from "../firebase/database.js";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { FIREBASE_DB_URL } from "../firebase/database.js"
 
 export const firebaseApi = createApi({
     reducerPath: "firebaseApi",
