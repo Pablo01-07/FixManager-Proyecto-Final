@@ -9,7 +9,6 @@ import * as FileSystem from "expo-file-system/legacy"
 import { useSaveProfilePictureMutation, useGetProfilePictureQuery } from "../services/userService"
 
 export default function ProfileScreen({ navigation }) {
-
     const { colors } = useTheme()
 
     const dispatch = useDispatch();
@@ -170,9 +169,7 @@ export default function ProfileScreen({ navigation }) {
                         </Text>
                     </View>
                 </View>
-
             </View>
-
         </View>
     );
 }

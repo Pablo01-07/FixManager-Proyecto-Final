@@ -5,12 +5,10 @@ import { useTheme } from "@react-navigation/native"
 import { setUser } from "../store/slices/authsSlice"
 import { setDarkMode } from "../store/slices/themesSlice"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-
 import InputForm from "../Components/InputForm"
 import { useLoginMutation } from "../services/authService"
 
 export default function LoginScreen({ navigation }) {
-
     const { colors } = useTheme()
 
     const [email, setEmail] = useState("")
@@ -81,7 +79,6 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
-
             <Text style={[styles.title, { color: colors.text }]}>
                 Iniciar sesión
             </Text>
@@ -117,7 +114,6 @@ export default function LoginScreen({ navigation }) {
                     Crear cuenta
                 </Text>
             </TouchableOpacity>
-
         </View>
     )
 }

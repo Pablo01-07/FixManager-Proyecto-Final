@@ -85,7 +85,6 @@ export const firebaseApi = createApi({
                         ? Object.values(response)
                         : []
         })
-
     })
 })
 

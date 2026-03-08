@@ -122,7 +122,6 @@ export default function NewReportScreen({ navigation }) {
             console.log(error)
             Alert.alert("Error al guardar en Firebase")
         }
-
     }
 
     if (isLoading) {

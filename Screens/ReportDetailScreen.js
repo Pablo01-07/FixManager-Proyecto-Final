@@ -8,7 +8,6 @@ import { updateAssetStatus } from "../store/slices/assetsSlice"
 import { useUpdateReportMutation } from "../services/firebaseApi"
 
 export default function ReportDetailScreen({ route }) {
-
     const { colors } = useTheme()
 
     const { report } = route.params;
@@ -94,7 +93,6 @@ export default function ReportDetailScreen({ route }) {
                         } catch (error) {
                             console.log(error);
                             Alert.alert("Error actualizando estado");
-
                         }
                     }
                 }
@@ -125,7 +123,6 @@ export default function ReportDetailScreen({ route }) {
 
     return (
         <View style={{ flex: 1, backgroundColor: colors.background }}>
-
             <Header
                 title="Detalle del Reporte"
                 showBack
@@ -195,7 +192,6 @@ export default function ReportDetailScreen({ route }) {
                         </Text>
                     </View>
                 ))}
-
             </ScrollView>
         </View>
     );

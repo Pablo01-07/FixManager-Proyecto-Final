@@ -63,7 +63,6 @@ export default function Search({ value, onChangeText }) {
                     />
                 </TouchableOpacity>
             )}
-
         </Animated.View>
     )
 }

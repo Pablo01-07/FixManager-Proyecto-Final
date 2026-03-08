@@ -9,7 +9,6 @@ import Search from "../Components/Search"
 import { Ionicons } from "@expo/vector-icons"
 
 export default function AssetsScreen({ route, navigation }) {
-
     const { colors } = useTheme()
 
     const categoryTitle = route?.params?.categoryTitle;
@@ -87,7 +86,6 @@ export default function AssetsScreen({ route, navigation }) {
                     <Ionicons name="add" size={28} color="#fff" />
                 </TouchableOpacity>
             )}
-
         </View>
     );
 }

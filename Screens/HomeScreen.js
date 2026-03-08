@@ -5,7 +5,6 @@ import CategoryCard from "../Components/CategoryCard"
 import { useGetCategoriesQuery } from "../services/firebaseApi";
 
 export default function HomeScreen({ navigation }) {
-
     const { colors } = useTheme()
 
     const { data: categories = [], isLoading, error } = useGetCategoriesQuery();

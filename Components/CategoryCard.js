@@ -40,14 +40,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#EAF2F8",
         marginBottom: 15,
         borderRadius: 12,
-
         borderWidth: 1,
-
         shadowColor: "#000",
         shadowOpacity: 0.06,
         shadowRadius: 6,
         shadowOffset: { width: 0, height: 2 },
-
         elevation: 2
     },
 

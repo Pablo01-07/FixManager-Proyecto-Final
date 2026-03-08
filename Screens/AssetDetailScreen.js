@@ -5,7 +5,6 @@ import { useTheme } from "@react-navigation/native"
 import ReportCard from "../Components/ReportCard"
 
 export default function AssetDetailScreen({ route }) {
-
     const { colors } = useTheme()
 
     const { asset } = route.params;

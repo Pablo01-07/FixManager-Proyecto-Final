@@ -41,7 +41,6 @@ const reportsSlice = createSlice({
         deleteReport: (state, action) => {
             return state.filter(report => report.id !== action.payload);
         }
-
     }
 });
 

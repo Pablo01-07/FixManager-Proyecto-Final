@@ -5,7 +5,6 @@ import InputForm from "../Components/InputForm"
 import { useSignUpMutation } from "../services/authService"
 
 export default function SignupScreen({ navigation }) {
-
     const { colors } = useTheme()
 
     const [email, setEmail] = useState("");
@@ -85,7 +84,6 @@ export default function SignupScreen({ navigation }) {
                     Ya tengo cuenta
                 </Text>
             </TouchableOpacity>
-
         </View>
     );
 }

@@ -7,7 +7,6 @@ import ReportCard from "../Components/ReportCard"
 import Header from "../Components/Header"
 
 export default function ReportsScreen() {
-
     const { colors } = useTheme()
 
     const navigation = useNavigation();
@@ -28,7 +27,6 @@ export default function ReportsScreen() {
 
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
-
             <Header
                 title="Reportes"
             />
@@ -75,7 +73,6 @@ export default function ReportsScreen() {
                     contentContainerStyle={{ paddingBottom: 20 }}
                 />
             )}
-
         </View>
     );
 }

@@ -2,10 +2,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Switch } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { useDispatch, useSelector } from "react-redux"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-
 import { logout } from "../store/slices/authsSlice"
 import { toggleDarkMode } from "../store/slices/themesSlice"
-
 import { LightTheme, DarkTheme } from "../Global/themes"
 
 const SettingsScreen = ({ navigation }) => {
@@ -35,7 +33,7 @@ const SettingsScreen = ({ navigation }) => {
                 key,
                 JSON.stringify(newTheme)
             )
-            
+
             console.log("Theme saved successfully")
 
         } catch (error) {
@@ -45,7 +43,6 @@ const SettingsScreen = ({ navigation }) => {
 
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
-
             <Text style={[styles.title, { color: colors.text }]}>
                 Settings
             </Text>
@@ -97,7 +94,6 @@ const SettingsScreen = ({ navigation }) => {
                     Logout
                 </Text>
             </TouchableOpacity>
-
         </View>
     )
 }

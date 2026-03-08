@@ -17,7 +17,6 @@ export default function Header({ title, showBack = false, rightIcon, onRightPres
                 }
             ]}
         >
-
             {showBack ? (
                 <TouchableOpacity
                     style={styles.iconContainer}
@@ -51,7 +50,6 @@ export default function Header({ title, showBack = false, rightIcon, onRightPres
             ) : (
                 <View style={styles.iconPlaceholder} />
             )}
-
         </View>
     );
 }
@@ -64,14 +62,11 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         paddingHorizontal: 16,
         backgroundColor: "#fff",
-
         borderBottomWidth: 1,
-
         shadowColor: "#000",
         shadowOpacity: 0.05,
         shadowRadius: 6,
         shadowOffset: { width: 0, height: 2 },
-
         elevation: 4
     },
 

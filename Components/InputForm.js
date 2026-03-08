@@ -46,7 +46,6 @@ export default function InputForm({ label, value, onChangeText, secureTextEntry,
                         />
                     </TouchableOpacity>
                 )}
-
             </View>
         </View>
     );
