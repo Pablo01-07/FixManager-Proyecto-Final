@@ -3,7 +3,6 @@ import { TouchableOpacity, Text, Image, StyleSheet, View } from "react-native"
 import { useTheme } from "@react-navigation/native"
 
 export default function AssetCard({ asset, onPress }) {
-
     const { colors } = useTheme()
 
     return (
@@ -39,7 +38,6 @@ export default function AssetCard({ asset, onPress }) {
 }
 
 const styles = StyleSheet.create({
-
     card: {
         marginBottom: 20,
         backgroundColor: "#F8F9F9",
@@ -73,5 +71,4 @@ const styles = StyleSheet.create({
     brand: {
         fontSize: 14
     }
-
 })

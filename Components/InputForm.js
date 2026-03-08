@@ -4,7 +4,6 @@ import { MaterialIcons } from "@expo/vector-icons"
 import { useTheme } from "@react-navigation/native"
 
 export default function InputForm({ label, value, onChangeText, secureTextEntry, keyboardType }) {
-
     const { colors } = useTheme()
 
     const [showPassword, setShowPassword] = useState(false)
@@ -12,7 +11,6 @@ export default function InputForm({ label, value, onChangeText, secureTextEntry,
 
     return (
         <View style={styles.container}>
-
             <Text style={[styles.label, { color: colors.text }]}>
                 {label}
             </Text>
@@ -50,13 +48,11 @@ export default function InputForm({ label, value, onChangeText, secureTextEntry,
                 )}
 
             </View>
-
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-
     container: {
         marginBottom: 18
     },
@@ -80,5 +76,4 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 16
     }
-
 })

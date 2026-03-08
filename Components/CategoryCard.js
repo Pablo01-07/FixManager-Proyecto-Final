@@ -4,7 +4,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { useTheme } from "@react-navigation/native"
 
 export default function CategoryCard({ category, onPress }) {
-
     const { colors } = useTheme()
 
     return (

@@ -1,8 +1,11 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native"
 import { useDispatch } from "react-redux"
 import { useTheme } from "@react-navigation/native"
 import { setUser } from "../store/slices/authsSlice"
+import { setDarkMode } from "../store/slices/themesSlice"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+
 import InputForm from "../Components/InputForm"
 import { useLoginMutation } from "../services/authService"
 
@@ -10,16 +13,43 @@ export default function LoginScreen({ navigation }) {
 
     const { colors } = useTheme()
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
 
-    const dispatch = useDispatch();
-    const [login, { isLoading }] = useLoginMutation();
+    const dispatch = useDispatch()
+    const [login, { isLoading }] = useLoginMutation()
+
+    useEffect(() => {
+        console.log("LOGIN SCREEN → reset theme to LIGHT")
+        dispatch(setDarkMode(false))
+    }, [])
+
+    const loadUserTheme = async (email) => {
+        try {
+
+            console.log("Loading theme for:", email)
+            const savedTheme = await AsyncStorage.getItem(`theme_${email}`)
+            console.log("Theme in storage:", savedTheme)
+
+            if (savedTheme !== null) {
+                const parsedTheme = JSON.parse(savedTheme)
+
+                console.log("Applying theme:", parsedTheme)
+
+                dispatch(setDarkMode(parsedTheme))
+            } else {
+                console.log("No theme saved for user")
+            }
+
+        } catch (error) {
+            console.log("Error loading theme:", error)
+        }
+    }
 
     const handleLogin = async () => {
         if (!email.trim() || !password.trim()) {
-            Alert.alert("Error", "Completa todos los campos");
-            return;
+            Alert.alert("Error", "Completa todos los campos")
+            return
         }
 
         try {
@@ -27,9 +57,9 @@ export default function LoginScreen({ navigation }) {
                 email: email.trim(),
                 password: password.trim(),
                 returnSecureToken: true
-            }).unwrap();
+            }).unwrap()
 
-            console.log("LOGIN OK", result);
+            console.log("LOGIN OK", result)
 
             dispatch(
                 setUser({
@@ -37,16 +67,17 @@ export default function LoginScreen({ navigation }) {
                     localId: result.localId,
                     idToken: result.idToken
                 })
-            );
-
+            )
+            await loadUserTheme(result.email)
         } catch (error) {
-            console.log("LOGIN ERROR", error);
+            console.log("LOGIN ERROR", error)
 
             const message =
-                error?.data?.error?.message || "Error al iniciar sesión";
-            Alert.alert("Error", message);
+                error?.data?.error?.message || "Error al iniciar sesión"
+
+            Alert.alert("Error", message)
         }
-    };
+    }
 
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -88,15 +119,14 @@ export default function LoginScreen({ navigation }) {
             </TouchableOpacity>
 
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
-        padding: 20,
-        backgroundColor: "#fff"
+        padding: 20
     },
 
     title: {
@@ -107,7 +137,6 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        backgroundColor: "#007AFF",
         padding: 15,
         borderRadius: 8,
         marginTop: 20,
@@ -121,7 +150,6 @@ const styles = StyleSheet.create({
 
     link: {
         marginTop: 20,
-        textAlign: "center",
-        color: "#007AFF"
+        textAlign: "center"
     }
 })

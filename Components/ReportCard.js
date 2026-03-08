@@ -8,7 +8,6 @@ import { useDeleteReportMutation, useDeleteAssetMutation } from "../services/fir
 import { MaterialIcons } from "@expo/vector-icons"
 
 export default function ReportCard({ report }) {
-
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const { colors } = useTheme()
@@ -120,7 +119,6 @@ export default function ReportCard({ report }) {
 }
 
 const styles = StyleSheet.create({
-
     card: {
         backgroundColor: "white",
         borderRadius: 12,
@@ -128,9 +126,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         elevation: 3,
         position: "relative",
-
         borderWidth: 1,
-
         shadowColor: "#000",
         shadowOpacity: 0.06,
         shadowRadius: 8,
@@ -174,5 +170,4 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 12
     }
-
 })

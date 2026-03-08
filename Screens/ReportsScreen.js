@@ -39,11 +39,22 @@ export default function ReportsScreen() {
                         key={item}
                         style={[
                             styles.filterButton,
-                            filter === item && styles.activeFilter
+                            {
+                                backgroundColor:
+                                    filter === item ? colors.primary : colors.card,
+                                borderColor: colors.border,
+                                borderWidth: 1
+                            }
                         ]}
                         onPress={() => setFilter(item)}
                     >
-                        <Text style={filter === item ? styles.activeText : [styles.text, { color: colors.text }]}>
+                        <Text
+                            style={
+                                filter === item
+                                    ? styles.activeText
+                                    : [styles.text, { color: colors.text }]
+                            }
+                        >
                             {item}
                         </Text>
                     </TouchableOpacity>
