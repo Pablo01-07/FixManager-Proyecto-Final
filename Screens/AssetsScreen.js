@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { View, FlatList, StyleSheet, Text, TouchableOpacity } from "react-native"
 import { useSelector, useDispatch } from "react-redux"
+import { useTheme } from "@react-navigation/native"
 import { useGetAssetsQuery } from "../services/firebaseApi"
 import { setAssets } from "../store/slices/assetsSlice"
 import AssetCard from "../Components/AssetCard"
@@ -8,6 +9,9 @@ import Search from "../Components/Search"
 import { Ionicons } from "@expo/vector-icons"
 
 export default function AssetsScreen({ route, navigation }) {
+
+    const { colors } = useTheme()
+
     const categoryTitle = route?.params?.categoryTitle;
     const dispatch = useDispatch();
     const { data = [], isLoading, error } = useGetAssetsQuery();
@@ -33,29 +37,29 @@ export default function AssetsScreen({ route, navigation }) {
 
     if (isLoading) {
         return (
-            <View style={styles.container}>
-                <Text>Cargando activos...</Text>
+            <View style={[styles.container, { backgroundColor: colors.background }]}>
+                <Text style={{ color: colors.text }}>Cargando activos...</Text>
             </View>
         );
     }
 
     if (error) {
         return (
-            <View style={styles.container}>
-                <Text>Error al cargar los activos</Text>
+            <View style={[styles.container, { backgroundColor: colors.background }]}>
+                <Text style={{ color: colors.text }}>Error al cargar los activos</Text>
             </View>
         );
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
 
             <Search
                 value={search}
                 onChangeText={setSearch}
             />
 
-            <Text style={styles.counter}>
+            <Text style={[styles.counter, { color: colors.text }]}>
                 {filteredAssets.length} activos encontrados
             </Text>
 
@@ -74,7 +78,10 @@ export default function AssetsScreen({ route, navigation }) {
 
             {!categoryTitle && (
                 <TouchableOpacity
-                    style={styles.fab}
+                    style={[
+                        styles.fab,
+                        { backgroundColor: colors.primary }
+                    ]}
                     onPress={() => navigation.navigate("NewReport")}
                 >
                     <Ionicons name="add" size={28} color="#fff" />

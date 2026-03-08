@@ -1,6 +1,6 @@
 import React from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useTheme } from "@react-navigation/native"
 import { useDispatch } from "react-redux"
 import { deleteReport } from "../store/slices/reportsSlice"
 import { deleteAsset } from "../store/slices/assetsSlice"
@@ -8,11 +8,13 @@ import { useDeleteReportMutation, useDeleteAssetMutation } from "../services/fir
 import { MaterialIcons } from "@expo/vector-icons"
 
 export default function ReportCard({ report }) {
-    const navigation = useNavigation();
-    const dispatch = useDispatch();
 
-    const [deleteReportFirebase] = useDeleteReportMutation();
-    const [deleteAssetFirebase] = useDeleteAssetMutation();
+    const navigation = useNavigation()
+    const dispatch = useDispatch()
+    const { colors } = useTheme()
+
+    const [deleteReportFirebase] = useDeleteReportMutation()
+    const [deleteAssetFirebase] = useDeleteAssetMutation()
 
     const getStatusColor = () => {
         switch (report.status) {
@@ -38,11 +40,13 @@ export default function ReportCard({ report }) {
                     style: "destructive",
                     onPress: async () => {
                         try {
+
                             await deleteReportFirebase(report.firebaseKey)
 
                             if (report.assetFirebaseKey) {
                                 await deleteAssetFirebase(report.assetFirebaseKey)
                             }
+
                             dispatch(deleteReport(report.id))
                             dispatch(deleteAsset(report.assetId))
 
@@ -58,7 +62,13 @@ export default function ReportCard({ report }) {
 
     return (
         <TouchableOpacity
-            style={styles.card}
+            style={[
+                styles.card,
+                {
+                    backgroundColor: colors.card,
+                    borderColor: colors.border
+                }
+            ]}
             onPress={() =>
                 navigation.navigate("ReportDetail", { report })
             }
@@ -69,20 +79,24 @@ export default function ReportCard({ report }) {
                 style={styles.deleteIcon}
                 onPress={handleDelete}
             >
-                <MaterialIcons name="delete" size={22} color="#FF3B30" />
+                <MaterialIcons
+                    name="delete"
+                    size={22}
+                    color="#FF3B30"
+                />
             </TouchableOpacity>
 
             <View style={styles.info}>
 
-                <Text style={styles.title}>
+                <Text style={[styles.title, { color: colors.text }]}>
                     {report.title}
                 </Text>
 
-                <Text style={styles.brand}>
+                <Text style={[styles.brand, { color: colors.text + "99" }]}>
                     Marca: {report.brand}
                 </Text>
 
-                <Text style={styles.category}>
+                <Text style={[styles.category, { color: colors.text + "99" }]}>
                     Categoría: {report.category}
                 </Text>
 
@@ -106,13 +120,21 @@ export default function ReportCard({ report }) {
 }
 
 const styles = StyleSheet.create({
+
     card: {
         backgroundColor: "white",
         borderRadius: 12,
-        padding: 12,
+        padding: 14,
         marginBottom: 12,
         elevation: 3,
-        position: "relative"
+        position: "relative",
+
+        borderWidth: 1,
+
+        shadowColor: "#000",
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 3 }
     },
 
     deleteIcon: {
@@ -132,13 +154,11 @@ const styles = StyleSheet.create({
     },
 
     brand: {
-        fontSize: 14,
-        color: "#555"
+        fontSize: 14
     },
 
     category: {
-        fontSize: 14,
-        color: "#555"
+        fontSize: 14
     },
 
     statusBadge: {
@@ -154,4 +174,5 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 12
     }
+
 })

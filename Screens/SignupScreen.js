@@ -1,9 +1,13 @@
 import React, { useState } from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native"
+import { useTheme } from "@react-navigation/native"
 import InputForm from "../Components/InputForm"
 import { useSignUpMutation } from "../services/authService"
 
 export default function SignupScreen({ navigation }) {
+
+    const { colors } = useTheme()
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -38,8 +42,11 @@ export default function SignupScreen({ navigation }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Crear Cuenta</Text>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+
+            <Text style={[styles.title, { color: colors.text }]}>
+                Crear Cuenta
+            </Text>
 
             <InputForm
                 label="Email"
@@ -63,7 +70,7 @@ export default function SignupScreen({ navigation }) {
             />
 
             <TouchableOpacity
-                style={styles.button}
+                style={[styles.button, { backgroundColor: colors.primary }]}
                 onPress={handleSignup}
             >
                 <Text style={styles.buttonText}>
@@ -74,10 +81,11 @@ export default function SignupScreen({ navigation }) {
             <TouchableOpacity
                 onPress={() => navigation.navigate("Login")}
             >
-                <Text style={styles.link}>
+                <Text style={[styles.link, { color: colors.primary }]}>
                     Ya tengo cuenta
                 </Text>
             </TouchableOpacity>
+
         </View>
     );
 }

@@ -1,11 +1,15 @@
 import React, { useState, useMemo } from "react"
 import { View, FlatList, Text, StyleSheet, TouchableOpacity } from "react-native"
+import { useTheme } from "@react-navigation/native"
 import { useGetReportsQuery } from "../services/firebaseApi"
 import { useNavigation } from "@react-navigation/native"
 import ReportCard from "../Components/ReportCard"
 import Header from "../Components/Header"
 
 export default function ReportsScreen() {
+
+    const { colors } = useTheme()
+
     const navigation = useNavigation();
 
     const { data: reports = [], isLoading } = useGetReportsQuery();
@@ -19,11 +23,11 @@ export default function ReportsScreen() {
     }, [reports, filter]);
 
     if (isLoading) {
-        return <Text style={{ padding: 20 }}>Cargando reportes...</Text>
+        return <Text style={{ padding: 20, color: colors.text }}>Cargando reportes...</Text>
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
 
             <Header
                 title="Reportes"
@@ -39,7 +43,7 @@ export default function ReportsScreen() {
                         ]}
                         onPress={() => setFilter(item)}
                     >
-                        <Text style={filter === item ? styles.activeText : styles.text}>
+                        <Text style={filter === item ? styles.activeText : [styles.text, { color: colors.text }]}>
                             {item}
                         </Text>
                     </TouchableOpacity>
@@ -47,7 +51,9 @@ export default function ReportsScreen() {
             </View>
 
             {filteredReports.length === 0 ? (
-                <Text style={styles.empty}>No hay reportes</Text>
+                <Text style={[styles.empty, { color: colors.text }]}>
+                    No hay reportes
+                </Text>
             ) : (
                 <FlatList
                     data={filteredReports}

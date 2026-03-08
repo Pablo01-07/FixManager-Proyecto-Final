@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react"
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Image, ScrollView } from "react-native"
+import { useTheme } from "@react-navigation/native"
 import * as ImagePicker from "expo-image-picker"
 import { Picker } from "@react-native-picker/picker"
 import { useGetCategoriesQuery, useGetAssetsQuery, useGetReportsQuery, useAddAssetMutation, useAddReportMutation } from "../services/firebaseApi"
 
 export default function NewReportScreen({ navigation }) {
+
+    const { colors } = useTheme()
+
     const { data: assets = [] } = useGetAssetsQuery()
     const { data: reports = [] } = useGetReportsQuery()
     const { data: categories = [], isLoading } = useGetCategoriesQuery()
@@ -120,7 +124,7 @@ export default function NewReportScreen({ navigation }) {
     }
 
     if (isLoading) {
-        return <Text style={{ padding: 20 }}>Cargando categorías...</Text>
+        return <Text style={{ padding: 20, color: colors.text }}>Cargando categorías...</Text>
     }
 
     const lastAssetId =
@@ -132,43 +136,42 @@ export default function NewReportScreen({ navigation }) {
     const newReportId = reports.length + 1
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}>
 
-            <Text style={styles.title}>Nuevo Reporte</Text>
+            <Text style={[styles.title, { color: colors.text }]}>Nuevo Reporte</Text>
 
-            <Text>ID Reporte: {newReportId}</Text>
-            <Text>ID Asset: {newAssetId}</Text>
+            <Text style={{ color: colors.text }}>ID Reporte: {newReportId}</Text>
+            <Text style={{ color: colors.text }}>ID Asset: {newAssetId}</Text>
 
-            <Text>Título</Text>
+            <Text style={{ color: colors.text }}>Título</Text>
             <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.text, borderColor: colors.border }]}
                 value={title}
                 onChangeText={setTitle}
             />
 
-            <Text>Marca</Text>
+            <Text style={{ color: colors.text }}>Marca</Text>
             <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.text, borderColor: colors.border }]}
                 value={brand}
                 onChangeText={setBrand}
             />
 
-            <Text>Descripción</Text>
+            <Text style={{ color: colors.text }}>Descripción</Text>
             <TextInput
-                style={[styles.input, styles.textArea]}
+                style={[styles.input, styles.textArea, { color: colors.text, borderColor: colors.border }]}
                 value={description}
                 onChangeText={setDescription}
                 multiline
             />
 
-            <Text>Categoría</Text>
+            <Text style={{ color: colors.text }}>Categoría</Text>
 
             <Picker
                 selectedValue={category}
                 onValueChange={(itemValue) => setCategory(itemValue)}
                 style={styles.input}
             >
-
                 {categories.map(cat => (
                     <Picker.Item
                         key={cat.id}
@@ -176,17 +179,15 @@ export default function NewReportScreen({ navigation }) {
                         value={cat.title}
                     />
                 ))}
-
             </Picker>
 
-            <Text>Estado del Asset</Text>
+            <Text style={{ color: colors.text }}>Estado del Asset</Text>
 
             <Picker
                 selectedValue={assetStatus}
                 onValueChange={(itemValue) => setAssetStatus(itemValue)}
                 style={styles.input}
             >
-
                 {assetStatuses.map(status => (
                     <Picker.Item
                         key={status}
@@ -194,13 +195,12 @@ export default function NewReportScreen({ navigation }) {
                         value={status}
                     />
                 ))}
-
             </Picker>
 
-            <Text>Ubicación</Text>
+            <Text style={{ color: colors.text }}>Ubicación</Text>
 
             <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.text, borderColor: colors.border }]}
                 value={location}
                 onChangeText={setLocation}
             />
@@ -209,14 +209,14 @@ export default function NewReportScreen({ navigation }) {
                 style={styles.imageButton}
                 onPress={pickImage}
             >
-                <Text>Seleccionar imagen</Text>
+                <Text style={{ color: colors.text }}>Seleccionar imagen</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
                 style={styles.imageButton}
                 onPress={takePhoto}
             >
-                <Text>Tomar foto</Text>
+                <Text style={{ color: colors.text }}>Tomar foto</Text>
             </TouchableOpacity>
 
             {image && (
@@ -227,7 +227,7 @@ export default function NewReportScreen({ navigation }) {
             )}
 
             <TouchableOpacity
-                style={styles.button}
+                style={[styles.button, { backgroundColor: colors.primary }]}
                 onPress={handleSubmit}
             >
                 <Text style={styles.buttonText}>

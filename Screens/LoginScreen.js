@@ -1,11 +1,15 @@
 import React, { useState } from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native"
 import { useDispatch } from "react-redux"
+import { useTheme } from "@react-navigation/native"
 import { setUser } from "../store/slices/authsSlice"
 import InputForm from "../Components/InputForm"
 import { useLoginMutation } from "../services/authService"
 
 export default function LoginScreen({ navigation }) {
+
+    const { colors } = useTheme()
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -45,8 +49,11 @@ export default function LoginScreen({ navigation }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Iniciar sesión</Text>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+
+            <Text style={[styles.title, { color: colors.text }]}>
+                Iniciar sesión
+            </Text>
 
             <InputForm
                 label="Email"
@@ -63,7 +70,7 @@ export default function LoginScreen({ navigation }) {
             />
 
             <TouchableOpacity
-                style={styles.button}
+                style={[styles.button, { backgroundColor: colors.primary }]}
                 onPress={handleLogin}
                 disabled={isLoading}
             >
@@ -75,10 +82,11 @@ export default function LoginScreen({ navigation }) {
             <TouchableOpacity
                 onPress={() => navigation.navigate("Signup")}
             >
-                <Text style={styles.link}>
+                <Text style={[styles.link, { color: colors.primary }]}>
                     Crear cuenta
                 </Text>
             </TouchableOpacity>
+
         </View>
     );
 }

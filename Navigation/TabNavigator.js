@@ -6,7 +6,7 @@ import { Image } from "react-native"
 import HomeStack from "./HomeStack"
 import AssetsStack from "./AssetsStack"
 import ReportsStack from "./ReportsStack"
-import ProfileScreen from "../Screens/ProfileScreen"
+import ProfileStack from "./ProfileStack"
 import { useGetReportsQuery } from "../services/firebaseApi"
 
 const Tab = createBottomTabNavigator();
@@ -65,7 +65,7 @@ export default function TabNavigator() {
 
             <Tab.Screen
                 name="Profile"
-                component={ProfileScreen}
+                component={ProfileStack}
                 options={{
                     tabBarIcon: ({ size }) => (
                         profileImage ? (

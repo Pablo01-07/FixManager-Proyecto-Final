@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView, Image } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
+import { useTheme } from "@react-navigation/native"
 import Header from "../Components/Header"
 import { updateReportStatus } from "../store/slices/reportsSlice"
 import { updateAssetStatus } from "../store/slices/assetsSlice"
 import { useUpdateReportMutation } from "../services/firebaseApi"
 
 export default function ReportDetailScreen({ route }) {
+
+    const { colors } = useTheme()
+
     const { report } = route.params;
 
     const dispatch = useDispatch();
@@ -120,7 +124,8 @@ export default function ReportDetailScreen({ route }) {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: "#F2F2F2" }}>
+        <View style={{ flex: 1, backgroundColor: colors.background }}>
+
             <Header
                 title="Detalle del Reporte"
                 showBack
@@ -128,7 +133,7 @@ export default function ReportDetailScreen({ route }) {
 
             <ScrollView contentContainerStyle={styles.container}>
 
-                <Text style={styles.title}>
+                <Text style={[styles.title, { color: colors.text }]}>
                     {currentReport.title}
                 </Text>
 
@@ -139,25 +144,27 @@ export default function ReportDetailScreen({ route }) {
                     />
                 )}
 
-                <Text>Marca: {currentReport.brand}</Text>
+                <Text style={{ color: colors.text }}>
+                    Marca: {currentReport.brand}
+                </Text>
 
-                <Text>
+                <Text style={{ color: colors.text }}>
                     Descripción: {currentReport.description}
                 </Text>
 
-                <Text>
+                <Text style={{ color: colors.text }}>
                     Categoría: {currentReport.category}
                 </Text>
 
-                <Text style={styles.assetInfo}>
+                <Text style={[styles.assetInfo, { color: colors.text }]}>
                     Estado actual del Asset: {asset?.availabilityStatus}
                 </Text>
 
-                <Text style={styles.currentStatus}>
+                <Text style={[styles.currentStatus, { color: colors.text }]}>
                     Estado actual del Reporte: {currentReport.status}
                 </Text>
 
-                <Text style={styles.sectionTitle}>
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>
                     Cambiar estado
                 </Text>
 
@@ -165,26 +172,30 @@ export default function ReportDetailScreen({ route }) {
                 {renderButton("En proceso", styles.process)}
                 {renderButton("Resuelto", styles.resolved)}
 
-                <Text style={styles.sectionTitle}>
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>
                     Historial de cambios
                 </Text>
 
                 {currentReport.history?.map((item, index) => (
                     <View
                         key={`${item.date}-${index}`}
-                        style={styles.historyItem}
+                        style={[
+                            styles.historyItem,
+                            { backgroundColor: colors.card }
+                        ]}
                     >
-                        <Text>
+                        <Text style={{ color: colors.text }}>
                             {item.from
                                 ? `${item.from} → ${item.to}`
                                 : `Creado como ${item.to}`}
                         </Text>
 
-                        <Text style={styles.historyDate}>
+                        <Text style={[styles.historyDate, { color: colors.text }]}>
                             {new Date(item.date).toLocaleString()}
                         </Text>
                     </View>
                 ))}
+
             </ScrollView>
         </View>
     );

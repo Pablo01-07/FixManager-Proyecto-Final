@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native"
 import { useSelector, useDispatch } from "react-redux"
-import { logout } from "../store/slices/authsSlice"
+import { useTheme } from "@react-navigation/native"
 import { setProfileImage } from "../store/slices/authsSlice"
 import { Ionicons } from "@expo/vector-icons"
 import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system/legacy"
 import { useSaveProfilePictureMutation, useGetProfilePictureQuery } from "../services/userService"
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }) {
+
+    const { colors } = useTheme()
+
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user);
 
@@ -25,12 +28,7 @@ export default function ProfileScreen() {
     console.log("USER OBJECT:", user);
     console.log("IMAGE FROM FIREBASE:", data);
 
-    const handleLogout = () => {
-        dispatch(logout());
-    };
-
     useEffect(() => {
-
         if (data?.image) {
             dispatch(setProfileImage(data.image))
         }
@@ -81,18 +79,19 @@ export default function ProfileScreen() {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
 
-                <Text style={styles.headerTitle}>
+            <View style={[styles.header, { borderBottomColor: colors.border }]}>
+
+                <Text style={[styles.headerTitle, { color: colors.text }]}>
                     Perfil
                 </Text>
 
-                <TouchableOpacity style={styles.settingsButton}>
+                <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate("Settings")}>
                     <Ionicons
                         name="settings-outline"
                         size={24}
-                        color="#333"
+                        color={colors.text}
                     />
                 </TouchableOpacity>
 
@@ -132,58 +131,48 @@ export default function ProfileScreen() {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.card}>
+            <View style={[styles.card, { backgroundColor: colors.card }]}>
+
                 <View style={styles.row}>
                     <Ionicons
                         name="mail-outline"
                         size={22}
-                        color="#007AFF"
+                        color={colors.primary}
                     />
 
                     <View style={styles.info}>
-                        <Text style={styles.label}>
+                        <Text style={[styles.label, { color: colors.text }]}>
                             Email
                         </Text>
 
-                        <Text style={styles.value}>
+                        <Text style={[styles.value, { color: colors.text }]}>
                             {user?.email}
                         </Text>
                     </View>
                 </View>
 
-                <View style={styles.divider} />
+                <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
                 <View style={styles.row}>
                     <Ionicons
                         name="finger-print-outline"
                         size={22}
-                        color="#007AFF"
+                        color={colors.primary}
                     />
 
                     <View style={styles.info}>
-                        <Text style={styles.label}>
+                        <Text style={[styles.label, { color: colors.text }]}>
                             User ID
                         </Text>
-                        <Text style={styles.value}>
+
+                        <Text style={[styles.value, { color: colors.text }]}>
                             {user?.localId}
                         </Text>
                     </View>
                 </View>
+
             </View>
 
-            <TouchableOpacity
-                style={styles.logoutButton}
-                onPress={handleLogout}
-            >
-                <Ionicons
-                    name="log-out-outline"
-                    size={20}
-                    color="white"
-                />
-                <Text style={styles.logoutText}>
-                    Cerrar sesión
-                </Text>
-            </TouchableOpacity>
         </View>
     );
 }
@@ -286,21 +275,5 @@ const styles = StyleSheet.create({
         height: 1,
         backgroundColor: "#eee",
         marginVertical: 15
-    },
-
-    logoutButton: {
-        flexDirection: "row",
-        backgroundColor: "#ff3b30",
-        padding: 15,
-        borderRadius: 10,
-        justifyContent: "center",
-        alignItems: "center"
-    },
-
-    logoutText: {
-        color: "white",
-        fontWeight: "bold",
-        marginLeft: 8,
-        fontSize: 16
     }
-});
+})

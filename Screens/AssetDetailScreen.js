@@ -1,9 +1,13 @@
 import React from "react"
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native"
 import { useSelector } from "react-redux"
+import { useTheme } from "@react-navigation/native"
 import ReportCard from "../Components/ReportCard"
 
 export default function AssetDetailScreen({ route }) {
+
+    const { colors } = useTheme()
+
     const { asset } = route.params;
     const reports = useSelector(state => state.reports);
 
@@ -12,16 +16,36 @@ export default function AssetDetailScreen({ route }) {
     );
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView
+            contentContainerStyle={[
+                styles.container,
+                { backgroundColor: colors.background }
+            ]}
+        >
             <Image source={{ uri: asset.thumbnail }} style={styles.image} />
-            <Text style={styles.title}>{asset.title}</Text>
-            <Text>Marca: {asset.brand}</Text>
-            <Text>Estado: {asset.availabilityStatus}</Text>
-            <Text>Ubicación: {asset.shippingInformation}</Text>
+
+            <Text style={[styles.title, { color: colors.text }]}>
+                {asset.title}
+            </Text>
+
+            <Text style={{ color: colors.text }}>
+                Marca: {asset.brand}
+            </Text>
+
+            <Text style={{ color: colors.text }}>
+                Estado: {asset.availabilityStatus}
+            </Text>
+
+            <Text style={{ color: colors.text }}>
+                Ubicación: {asset.shippingInformation}
+            </Text>
 
             {assetReports.length > 0 && (
                 <>
-                    <Text style={styles.reportTitle}>Reportes:</Text>
+                    <Text style={[styles.reportTitle, { color: colors.text }]}>
+                        Reportes:
+                    </Text>
+
                     {assetReports.map(report => (
                         <ReportCard key={report.id} report={report} />
                     ))}
