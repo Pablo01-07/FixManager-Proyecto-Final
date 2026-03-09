@@ -1,9 +1,48 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { TouchableOpacity, Text, Image, StyleSheet, View } from "react-native"
 import { useTheme } from "@react-navigation/native"
+import { useSelector } from "react-redux"
+import { FIREBASE_DB_URL } from "../firebase/database"
 
 export default function AssetCard({ asset, onPress }) {
     const { colors } = useTheme()
+    const reports = useSelector(state => state.reports)
+
+    const [reportImage, setReportImage] = useState(null)
+
+    const assetReports = reports.filter(
+        report => report.assetId === asset.id
+    )
+
+    const latestReport = assetReports.length > 0
+        ? assetReports[assetReports.length - 1]
+        : null
+
+    useEffect(() => {
+        const loadImage = async () => {
+
+            if (!latestReport) {
+                setReportImage(null)
+                return
+            }
+
+            try {
+                const url = `${FIREBASE_DB_URL}reportPictures/${latestReport.id}.json`
+                const response = await fetch(url)
+                const data = await response.json()
+
+                if (data?.image) {
+                    const base64Image = `data:image/jpeg;base64,${data.image}`
+                    setReportImage(base64Image)
+                } else {
+                    setReportImage(null)
+                }
+            } catch (error) {
+                console.log("ERROR LOADING REPORT IMAGE:", error)
+            }
+        }
+        loadImage()
+    }, [reports])
 
     return (
         <TouchableOpacity
@@ -17,8 +56,11 @@ export default function AssetCard({ asset, onPress }) {
             activeOpacity={0.9}
             onPress={onPress}
         >
+
             <Image
-                source={{ uri: asset.thumbnail }}
+                source={{
+                    uri: reportImage ? reportImage : asset.thumbnail
+                }}
                 style={styles.image}
             />
 
@@ -40,7 +82,6 @@ export default function AssetCard({ asset, onPress }) {
 const styles = StyleSheet.create({
     card: {
         marginBottom: 20,
-        backgroundColor: "#F8F9F9",
         borderRadius: 12,
         overflow: "hidden",
         elevation: 3,

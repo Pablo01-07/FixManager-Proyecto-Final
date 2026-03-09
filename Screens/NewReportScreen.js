@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react"
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Image, ScrollView } from "react-native"
 import { useTheme } from "@react-navigation/native"
 import * as ImagePicker from "expo-image-picker"
+import * as FileSystem from "expo-file-system/legacy"
 import { Picker } from "@react-native-picker/picker"
 import { Ionicons } from "@expo/vector-icons"
+import { FIREBASE_DB_URL } from "../firebase/database"
 import { useGetCategoriesQuery, useGetAssetsQuery, useGetReportsQuery, useAddAssetMutation, useAddReportMutation } from "../services/firebaseApi"
 
 export default function NewReportScreen({ navigation }) {
@@ -40,17 +42,25 @@ export default function NewReportScreen({ navigation }) {
     }, [categories])
 
     const pickImage = async () => {
+        console.log("OPENING GALLERY")
+
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 1
         })
 
         if (!result.canceled) {
+
+            console.log("IMAGE SELECTED:", result.assets[0].uri)
+
             setImage(result.assets[0].uri)
+
         }
     }
 
     const takePhoto = async () => {
+        console.log("OPENING CAMERA")
+
         const permission = await ImagePicker.requestCameraPermissionsAsync()
 
         if (!permission.granted) {
@@ -63,7 +73,52 @@ export default function NewReportScreen({ navigation }) {
         })
 
         if (!result.canceled) {
+
+            console.log("PHOTO TAKEN:", result.assets[0].uri)
+
             setImage(result.assets[0].uri)
+        }
+    }
+
+    const convertToBase64 = async (uri) => {
+        try {
+
+            console.log("CONVERTING IMAGE TO BASE64")
+
+            const base64 = await FileSystem.readAsStringAsync(uri, {
+                encoding: FileSystem.EncodingType.Base64
+            })
+
+            console.log("BASE64 GENERATED")
+            return base64
+
+        } catch (error) {
+            console.log("ERROR CONVERTING IMAGE:", error)
+            return null
+        }
+    }
+
+    const saveReportPicture = async (base64Image, reportId) => {
+        try {
+            const url = `${FIREBASE_DB_URL}reportPictures/${reportId}.json`
+
+            console.log("SAVING REPORT IMAGE IN FIREBASE")
+            console.log("URL:", url)
+
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    image: base64Image
+                })
+            })
+
+            const data = await response.json()
+            console.log("REPORT IMAGE SAVED:", data)
+        } catch (error) {
+            console.log("ERROR SAVING REPORT IMAGE:", error)
         }
     }
 
@@ -79,6 +134,13 @@ export default function NewReportScreen({ navigation }) {
                 : 0
 
         const newAssetId = lastAssetId + 1
+        const newReportId = reports.length + 1
+
+        let base64Image = null
+
+        if (image) {
+            base64Image = await convertToBase64(image)
+        }
 
         const newAsset = {
             id: newAssetId,
@@ -91,12 +153,14 @@ export default function NewReportScreen({ navigation }) {
         }
 
         try {
-
+            console.log("CREATING ASSET")
             const assetResponse = await addAssetFirebase(newAsset).unwrap()
+
             const assetFirebaseKey = assetResponse.name
+            console.log("ASSET CREATED:", assetFirebaseKey)
 
             const newReport = {
-                id: reports.length + 1,
+                id: newReportId,
                 assetId: newAssetId,
                 assetFirebaseKey: assetFirebaseKey,
                 title,
@@ -114,12 +178,21 @@ export default function NewReportScreen({ navigation }) {
                 date: new Date().toISOString()
             }
 
+            console.log("CREATING REPORT")
+
             await addReportFirebase(newReport).unwrap()
+
+            console.log("REPORT CREATED")
+
+            if (base64Image) {
+                await saveReportPicture(base64Image, newReportId)
+            }
 
             Alert.alert("Reporte creado correctamente")
             navigation.goBack()
+
         } catch (error) {
-            console.log(error)
+            console.log("ERROR:", error)
             Alert.alert("Error al guardar en Firebase")
         }
     }
@@ -143,7 +216,6 @@ export default function NewReportScreen({ navigation }) {
                 { backgroundColor: colors.background }
             ]}
         >
-
             <Text style={[styles.title, { color: colors.text }]}>
                 Nuevo Reporte
             </Text>
@@ -273,14 +345,18 @@ export default function NewReportScreen({ navigation }) {
                     ]}
                     onPress={pickImage}
                 >
+
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+
                         <Ionicons name="images-outline" size={20} color={colors.text} />
+
                         <Text style={{ color: colors.text }}>
                             Galería
                         </Text>
-                    </View>
-                </TouchableOpacity>
 
+                    </View>
+
+                </TouchableOpacity>
 
                 <TouchableOpacity
                     style={[
@@ -292,12 +368,17 @@ export default function NewReportScreen({ navigation }) {
                     ]}
                     onPress={takePhoto}
                 >
+
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+
                         <Ionicons name="camera-outline" size={20} color={colors.text} />
+
                         <Text style={{ color: colors.text }}>
                             Cámara
                         </Text>
+
                     </View>
+
                 </TouchableOpacity>
 
             </View>

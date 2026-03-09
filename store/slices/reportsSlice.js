@@ -4,6 +4,10 @@ const reportsSlice = createSlice({
     name: "reports",
     initialState: [],
     reducers: {
+        setReports: (state, action) => {
+            return action.payload
+        },
+
         addReport: (state, action) => {
             state.push({
                 ...action.payload,
@@ -44,5 +48,5 @@ const reportsSlice = createSlice({
     }
 });
 
-export const { addReport, updateReportStatus, deleteReport } = reportsSlice.actions;
+export const { setReports, addReport, updateReportStatus, deleteReport } = reportsSlice.actions;
 export default reportsSlice.reducer

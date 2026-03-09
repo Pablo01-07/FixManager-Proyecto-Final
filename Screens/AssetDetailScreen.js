@@ -1,18 +1,44 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native"
 import { useSelector } from "react-redux"
 import { useTheme } from "@react-navigation/native"
-import ReportCard from "../Components/ReportCard"
+import { FIREBASE_DB_URL } from "../firebase/database"
 
 export default function AssetDetailScreen({ route }) {
     const { colors } = useTheme()
+    const { asset } = route.params
 
-    const { asset } = route.params;
-    const reports = useSelector(state => state.reports);
+    const reports = useSelector(state => state.reports)
+    const [reportImage, setReportImage] = useState(null)
 
     const assetReports = reports.filter(
         report => report.assetId === asset.id
-    );
+    )
+
+    const latestReport = assetReports.length > 0
+        ? assetReports[assetReports.length - 1]
+        : null
+
+    useEffect(() => {
+        const loadImage = async () => {
+            if (!latestReport) return
+
+            try {
+                const response = await fetch(
+                    `${FIREBASE_DB_URL}reportPictures/${latestReport.id}.json`
+                )
+
+                const data = await response.json()
+
+                if (data?.image) {
+                    setReportImage(`data:image/jpeg;base64,${data.image}`)
+                }
+            } catch (error) {
+                console.log("ERROR LOADING IMAGE:", error)
+            }
+        }
+        loadImage()
+    }, [reports])
 
     return (
         <ScrollView
@@ -21,7 +47,12 @@ export default function AssetDetailScreen({ route }) {
                 { backgroundColor: colors.background }
             ]}
         >
-            <Image source={{ uri: asset.thumbnail }} style={styles.image} />
+            <Image
+                source={{
+                    uri: reportImage ? reportImage : asset.thumbnail
+                }}
+                style={styles.image}
+            />
 
             <Text style={[styles.title, { color: colors.text }]}>
                 {asset.title}
@@ -38,20 +69,8 @@ export default function AssetDetailScreen({ route }) {
             <Text style={{ color: colors.text }}>
                 Ubicación: {asset.shippingInformation}
             </Text>
-
-            {assetReports.length > 0 && (
-                <>
-                    <Text style={[styles.reportTitle, { color: colors.text }]}>
-                        Reportes:
-                    </Text>
-
-                    {assetReports.map(report => (
-                        <ReportCard key={report.id} report={report} />
-                    ))}
-                </>
-            )}
         </ScrollView>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -61,20 +80,14 @@ const styles = StyleSheet.create({
 
     image: {
         width: "100%",
-        height: 200,
-        borderRadius: 12
+        height: 220,
+        borderRadius: 12,
+        marginBottom: 15
     },
 
     title: {
         fontSize: 22,
         fontWeight: "bold",
-        marginVertical: 10
-    },
-    
-    reportTitle: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginTop: 25,
         marginBottom: 10
     }
 })

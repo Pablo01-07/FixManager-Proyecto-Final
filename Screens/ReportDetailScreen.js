@@ -6,33 +6,54 @@ import Header from "../Components/Header"
 import { updateReportStatus } from "../store/slices/reportsSlice"
 import { updateAssetStatus } from "../store/slices/assetsSlice"
 import { useUpdateReportMutation } from "../services/firebaseApi"
+import { FIREBASE_DB_URL } from "../firebase/database"
 
 export default function ReportDetailScreen({ route }) {
     const { colors } = useTheme()
 
-    const { report } = route.params;
+    const { report } = route.params
 
-    const dispatch = useDispatch();
-    const [updateReport] = useUpdateReportMutation();
+    const dispatch = useDispatch()
+    const [updateReport] = useUpdateReportMutation()
 
     const reportFromRedux = useSelector(state =>
         state.reports.find(r => r.id === report.id)
-    );
+    )
 
-    const [currentReport, setCurrentReport] = useState(reportFromRedux || report);
+    const [currentReport, setCurrentReport] = useState(reportFromRedux || report)
+    const [reportImage, setReportImage] = useState(null)
 
     useEffect(() => {
         if (reportFromRedux) {
-            setCurrentReport(reportFromRedux);
+            setCurrentReport(reportFromRedux)
         }
-    }, [reportFromRedux]);
+    }, [reportFromRedux])
 
     const asset = useSelector(state =>
         state.assets.find(a => a.id === currentReport.assetId)
-    );
+    )
+
+    useEffect(() => {
+        const loadReportImage = async () => {
+            try {
+                const response = await fetch(
+                    `${FIREBASE_DB_URL}reportPictures/${currentReport.id}.json`
+                )
+
+                const data = await response.json()
+
+                if (data?.image) {
+                    setReportImage(`data:image/jpeg;base64,${data.image}`)
+                }
+            } catch (error) {
+                console.log("ERROR LOADING REPORT IMAGE:", error)
+            }
+        }
+        loadReportImage()
+    }, [])
 
     const changeStatus = (newStatus) => {
-        if (currentReport.status === newStatus) return;
+        if (currentReport.status === newStatus) return
 
         Alert.alert(
             "Confirmar cambio",
@@ -43,7 +64,7 @@ export default function ReportDetailScreen({ route }) {
                     text: "Confirmar",
                     onPress: async () => {
 
-                        const previousStatus = currentReport.status;
+                        const previousStatus = currentReport.status
 
                         const newHistory = [
                             ...(currentReport.history || []),
@@ -52,7 +73,7 @@ export default function ReportDetailScreen({ route }) {
                                 to: newStatus,
                                 date: new Date().toISOString()
                             }
-                        ];
+                        ]
 
                         try {
                             await updateReport({
@@ -61,48 +82,48 @@ export default function ReportDetailScreen({ route }) {
                                     status: newStatus,
                                     history: newHistory
                                 }
-                            }).unwrap();
+                            }).unwrap()
 
                             setCurrentReport({
                                 ...currentReport,
                                 status: newStatus,
                                 history: newHistory
-                            });
+                            })
 
                             dispatch(updateReportStatus({
                                 id: currentReport.id,
                                 status: newStatus
-                            }));
+                            }))
 
                             if (newStatus === "En proceso") {
                                 dispatch(updateAssetStatus({
                                     id: currentReport.assetId,
                                     availabilityStatus: "En reparación"
-                                }));
+                                }))
                             }
 
                             if (newStatus === "Resuelto") {
                                 dispatch(updateAssetStatus({
                                     id: currentReport.assetId,
                                     availabilityStatus: "Operativo"
-                                }));
+                                }))
                             }
 
-                            Alert.alert("Estado actualizado correctamente");
+                            Alert.alert("Estado actualizado correctamente")
 
                         } catch (error) {
-                            console.log(error);
-                            Alert.alert("Error actualizando estado");
+                            console.log(error)
+                            Alert.alert("Error actualizando estado")
                         }
                     }
                 }
             ]
-        );
+        )
     }
 
     const renderButton = (status, styleColor) => {
-        const isActive = currentReport.status === status;
-        const isResolved = currentReport.status === "Resuelto";
+        const isActive = currentReport.status === status
+        const isResolved = currentReport.status === "Resuelto"
 
         return (
             <TouchableOpacity
@@ -114,12 +135,14 @@ export default function ReportDetailScreen({ route }) {
                 disabled={isActive || isResolved}
                 onPress={() => changeStatus(status)}
             >
+
                 <Text style={styles.buttonText}>
                     {status}
                 </Text>
+
             </TouchableOpacity>
-        );
-    };
+        )
+    }
 
     return (
         <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -134,9 +157,9 @@ export default function ReportDetailScreen({ route }) {
                     {currentReport.title}
                 </Text>
 
-                {asset?.thumbnail && (
+                {reportImage && (
                     <Image
-                        source={{ uri: asset.thumbnail }}
+                        source={{ uri: reportImage }}
                         style={styles.image}
                     />
                 )}
@@ -174,6 +197,7 @@ export default function ReportDetailScreen({ route }) {
                 </Text>
 
                 {currentReport.history?.map((item, index) => (
+
                     <View
                         key={`${item.date}-${index}`}
                         style={[
@@ -181,6 +205,7 @@ export default function ReportDetailScreen({ route }) {
                             { backgroundColor: colors.card }
                         ]}
                     >
+
                         <Text style={{ color: colors.text }}>
                             {item.from
                                 ? `${item.from} → ${item.to}`
@@ -194,7 +219,7 @@ export default function ReportDetailScreen({ route }) {
                 ))}
             </ScrollView>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -206,6 +231,13 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: "bold",
         marginBottom: 10
+    },
+
+    image: {
+        width: "100%",
+        height: 220,
+        borderRadius: 12,
+        marginVertical: 15
     },
 
     assetInfo: {
@@ -255,16 +287,8 @@ const styles = StyleSheet.create({
 
     historyItem: {
         padding: 10,
-        backgroundColor: "#F4F6F6",
         borderRadius: 8,
         marginBottom: 8
-    },
-
-    image: {
-        width: "100%",
-        height: 200,
-        borderRadius: 12,
-        marginVertical: 15
     },
 
     historyDate: {

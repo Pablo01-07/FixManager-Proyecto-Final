@@ -6,6 +6,7 @@ import { deleteReport } from "../store/slices/reportsSlice"
 import { deleteAsset } from "../store/slices/assetsSlice"
 import { useDeleteReportMutation, useDeleteAssetMutation } from "../services/firebaseApi"
 import { MaterialIcons } from "@expo/vector-icons"
+import { FIREBASE_DB_URL } from "../firebase/database"
 
 export default function ReportCard({ report }) {
     const navigation = useNavigation()
@@ -28,6 +29,21 @@ export default function ReportCard({ report }) {
         }
     }
 
+    const deleteReportPicture = async (reportId) => {
+        try {
+            const url = `${FIREBASE_DB_URL}reportPictures/${reportId}.json`
+
+            console.log("DELETING REPORT IMAGE:", url)
+
+            await fetch(url, {
+                method: "DELETE"
+            })
+            console.log("REPORT IMAGE DELETED")
+        } catch (error) {
+            console.log("ERROR DELETING REPORT IMAGE:", error)
+        }
+    }
+
     const handleDelete = () => {
         Alert.alert(
             "Eliminar reporte",
@@ -38,7 +54,10 @@ export default function ReportCard({ report }) {
                     text: "Eliminar",
                     style: "destructive",
                     onPress: async () => {
+
                         try {
+
+                            console.log("DELETING REPORT")
 
                             await deleteReportFirebase(report.firebaseKey)
 
@@ -46,8 +65,12 @@ export default function ReportCard({ report }) {
                                 await deleteAssetFirebase(report.assetFirebaseKey)
                             }
 
+                            await deleteReportPicture(report.id)
+
                             dispatch(deleteReport(report.id))
                             dispatch(deleteAsset(report.assetId))
+
+                            console.log("REPORT COMPLETELY DELETED")
 
                         } catch (error) {
                             console.log(error)
@@ -78,11 +101,13 @@ export default function ReportCard({ report }) {
                 style={styles.deleteIcon}
                 onPress={handleDelete}
             >
+
                 <MaterialIcons
                     name="delete"
                     size={22}
                     color="#FF3B30"
                 />
+
             </TouchableOpacity>
 
             <View style={styles.info}>
@@ -109,11 +134,8 @@ export default function ReportCard({ report }) {
                     <Text style={styles.statusText}>
                         {report.status}
                     </Text>
-
                 </View>
-
             </View>
-
         </TouchableOpacity>
     )
 }

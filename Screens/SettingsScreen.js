@@ -5,6 +5,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { logout } from "../store/slices/authsSlice"
 import { toggleDarkMode } from "../store/slices/themesSlice"
 import { LightTheme, DarkTheme } from "../Global/themes"
+import { Animated } from "react-native"
+import { useEffect, useRef } from "react"
 
 const SettingsScreen = ({ navigation }) => {
     const dispatch = useDispatch()
@@ -14,6 +16,21 @@ const SettingsScreen = ({ navigation }) => {
 
     const theme = darkMode ? DarkTheme : LightTheme
     const colors = theme.colors
+
+    const rotateAnim = useRef(new Animated.Value(0)).current
+
+    useEffect(() => {
+        Animated.timing(rotateAnim, {
+            toValue: darkMode ? 1 : 0,
+            duration: 400,
+            useNativeDriver: true
+        }).start()
+    }, [darkMode])
+
+    const rotate = rotateAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["0deg", "360deg"]
+    })
 
     const handleThemeChange = async () => {
         const newTheme = !darkMode
@@ -71,7 +88,13 @@ const SettingsScreen = ({ navigation }) => {
 
             <View style={[styles.item, { borderColor: colors.border }]}>
 
-                <Ionicons name="moon-outline" size={22} color={colors.text} />
+                <Animated.View style={{ transform: [{ rotate }] }}>
+                    <Ionicons
+                        name={darkMode ? "moon-outline" : "sunny-outline"}
+                        size={22}
+                        color={colors.text}
+                    />
+                </Animated.View>
 
                 <Text style={[styles.text, { color: colors.text }]}>
                     {darkMode ? "Dark Mode" : "Light Mode"}
