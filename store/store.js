@@ -3,6 +3,7 @@ import reportsReducer from "./slices/reportsSlice"
 import assetsReducer from "./slices/assetsSlice"
 import authReducer from "./slices/authsSlice"
 import themeReducer from "./slices/themesSlice"
+import filterReducer from "./slices/filtersSlice"
 import { firebaseApi } from "../services/firebaseApi"
 import { authApi } from "../services/authService"
 import { userApi } from "../services/userService"
@@ -13,6 +14,7 @@ export const store = configureStore({
         assets: assetsReducer,
         auth: authReducer,
         theme: themeReducer,
+        filter: filterReducer,
         [firebaseApi.reducerPath]: firebaseApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
         [userApi.reducerPath]: userApi.reducer

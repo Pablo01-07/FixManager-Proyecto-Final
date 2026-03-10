@@ -1,7 +1,7 @@
 import React from "react"
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native"
 import { useNavigation, useTheme } from "@react-navigation/native"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { deleteReport } from "../store/slices/reportsSlice"
 import { deleteAsset } from "../store/slices/assetsSlice"
 import { useDeleteReportMutation, useDeleteAssetMutation } from "../services/firebaseApi"
@@ -12,6 +12,8 @@ export default function ReportCard({ report }) {
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const { colors } = useTheme()
+
+    const userId = useSelector(state => state.auth.user?.localId)
 
     const [deleteReportFirebase] = useDeleteReportMutation()
     const [deleteAssetFirebase] = useDeleteAssetMutation()
@@ -29,16 +31,14 @@ export default function ReportCard({ report }) {
         }
     }
 
-    const deleteReportPicture = async (reportId) => {
+    const deleteReportPicture = async (firebaseKey) => {
         try {
-            const url = `${FIREBASE_DB_URL}reportPictures/${reportId}.json`
-
-            console.log("DELETING REPORT IMAGE:", url)
+            const url = `${FIREBASE_DB_URL}reportPictures/${userId}/${firebaseKey}.json`
 
             await fetch(url, {
                 method: "DELETE"
             })
-            console.log("REPORT IMAGE DELETED")
+
         } catch (error) {
             console.log("ERROR DELETING REPORT IMAGE:", error)
         }
@@ -50,22 +50,27 @@ export default function ReportCard({ report }) {
             "¿Seguro que deseas eliminar este reporte?",
             [
                 { text: "Cancelar", style: "cancel" },
+
                 {
                     text: "Eliminar",
                     style: "destructive",
+
                     onPress: async () => {
-
                         try {
+                            console.log("DELETING REPORT:", report.firebaseKey)
 
-                            console.log("DELETING REPORT")
-
-                            await deleteReportFirebase(report.firebaseKey)
+                            await deleteReportFirebase({
+                                userId,
+                                firebaseKey: report.firebaseKey
+                            }).unwrap()
 
                             if (report.assetFirebaseKey) {
-                                await deleteAssetFirebase(report.assetFirebaseKey)
+                                await deleteAssetFirebase(
+                                    report.assetFirebaseKey
+                                ).unwrap()
                             }
 
-                            await deleteReportPicture(report.id)
+                            await deleteReportPicture(report.firebaseKey)
 
                             dispatch(deleteReport(report.id))
                             dispatch(deleteAsset(report.assetId))
@@ -73,8 +78,11 @@ export default function ReportCard({ report }) {
                             console.log("REPORT COMPLETELY DELETED")
 
                         } catch (error) {
-                            console.log(error)
-                            Alert.alert("Error eliminando reporte")
+                            console.log("DELETE ERROR:", error)
+                            Alert.alert(
+                                "Error",
+                                "No se pudo eliminar el reporte"
+                            )
                         }
                     }
                 }
@@ -96,22 +104,18 @@ export default function ReportCard({ report }) {
             }
             activeOpacity={0.9}
         >
-
             <TouchableOpacity
                 style={styles.deleteIcon}
                 onPress={handleDelete}
             >
-
                 <MaterialIcons
                     name="delete"
                     size={22}
                     color="#FF3B30"
                 />
-
             </TouchableOpacity>
 
             <View style={styles.info}>
-
                 <Text style={[styles.title, { color: colors.text }]}>
                     {report.title}
                 </Text>
@@ -130,7 +134,6 @@ export default function ReportCard({ report }) {
                         { backgroundColor: getStatusColor() }
                     ]}
                 >
-
                     <Text style={styles.statusText}>
                         {report.status}
                     </Text>

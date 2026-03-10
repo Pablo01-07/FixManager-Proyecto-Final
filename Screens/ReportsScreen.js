@@ -1,36 +1,42 @@
-import React, { useState, useMemo } from "react"
+import React, { useMemo } from "react"
 import { View, FlatList, Text, StyleSheet, TouchableOpacity } from "react-native"
 import { useTheme } from "@react-navigation/native"
+import { useDispatch, useSelector } from "react-redux"
 import { useGetReportsQuery } from "../services/firebaseApi"
-import { useNavigation } from "@react-navigation/native"
+import { setFilter } from "../store/slices/filtersSlice"
 import ReportCard from "../Components/ReportCard"
 import Header from "../Components/Header"
 
 export default function ReportsScreen() {
     const { colors } = useTheme()
+    const dispatch = useDispatch()
 
-    const navigation = useNavigation();
+    const userId = useSelector(state => state.auth.user?.localId)
+    const { data: reports = [], isLoading } = useGetReportsQuery(userId)
 
-    const { data: reports = [], isLoading } = useGetReportsQuery();
-
-    const [filter, setFilter] = useState("Todos");
+    const filter = useSelector(state => state.filter)
 
     const filteredReports = useMemo(() => {
         return reports.filter(
             r => filter === "Todos" || r.status === filter
         )
-    }, [reports, filter]);
+    }, [reports, filter])
 
     if (isLoading) {
-        return <Text style={{ padding: 20, color: colors.text }}>Cargando reportes...</Text>
+        return (
+            <Text style={{ padding: 20, color: colors.text }}>
+                Cargando reportes...
+            </Text>
+        )
     }
 
     return (
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
-            <Header
-                title="Reportes"
-            />
-
+        <View
+            style={[
+                styles.container,
+                { backgroundColor: colors.background }
+            ]}
+        >
             <View style={styles.filters}>
                 {["Todos", "Pendiente", "En proceso", "Resuelto"].map(item => (
                     <TouchableOpacity
@@ -39,12 +45,14 @@ export default function ReportsScreen() {
                             styles.filterButton,
                             {
                                 backgroundColor:
-                                    filter === item ? colors.primary : colors.card,
+                                    filter === item
+                                        ? colors.primary
+                                        : colors.card,
                                 borderColor: colors.border,
                                 borderWidth: 1
                             }
                         ]}
-                        onPress={() => setFilter(item)}
+                        onPress={() => dispatch(setFilter(item))}
                     >
                         <Text
                             style={
@@ -74,7 +82,7 @@ export default function ReportsScreen() {
                 />
             )}
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -93,12 +101,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 20,
-        backgroundColor: "#eee",
         margin: 4
-    },
-
-    activeFilter: {
-        backgroundColor: "#007AFF"
     },
 
     text: {
@@ -113,7 +116,6 @@ const styles = StyleSheet.create({
     empty: {
         textAlign: "center",
         marginTop: 50,
-        color: "#666",
         fontSize: 16
     }
 })

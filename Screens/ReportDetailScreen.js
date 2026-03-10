@@ -10,11 +10,12 @@ import { FIREBASE_DB_URL } from "../firebase/database"
 
 export default function ReportDetailScreen({ route }) {
     const { colors } = useTheme()
-
     const { report } = route.params
 
     const dispatch = useDispatch()
     const [updateReport] = useUpdateReportMutation()
+
+    const userId = useSelector(state => state.auth.user?.localId)
 
     const reportFromRedux = useSelector(state =>
         state.reports.find(r => r.id === report.id)
@@ -37,7 +38,7 @@ export default function ReportDetailScreen({ route }) {
         const loadReportImage = async () => {
             try {
                 const response = await fetch(
-                    `${FIREBASE_DB_URL}reportPictures/${currentReport.id}.json`
+                    `${FIREBASE_DB_URL}reportPictures/${userId}/${currentReport.firebaseKey}.json`
                 )
 
                 const data = await response.json()
@@ -50,7 +51,7 @@ export default function ReportDetailScreen({ route }) {
             }
         }
         loadReportImage()
-    }, [])
+    }, [currentReport, userId])
 
     const changeStatus = (newStatus) => {
         if (currentReport.status === newStatus) return
@@ -63,7 +64,6 @@ export default function ReportDetailScreen({ route }) {
                 {
                     text: "Confirmar",
                     onPress: async () => {
-
                         const previousStatus = currentReport.status
 
                         const newHistory = [
@@ -77,6 +77,7 @@ export default function ReportDetailScreen({ route }) {
 
                         try {
                             await updateReport({
+                                userId,
                                 firebaseKey: currentReport.firebaseKey,
                                 updatedData: {
                                     status: newStatus,
@@ -108,9 +109,7 @@ export default function ReportDetailScreen({ route }) {
                                     availabilityStatus: "Operativo"
                                 }))
                             }
-
                             Alert.alert("Estado actualizado correctamente")
-
                         } catch (error) {
                             console.log(error)
                             Alert.alert("Error actualizando estado")
@@ -135,33 +134,27 @@ export default function ReportDetailScreen({ route }) {
                 disabled={isActive || isResolved}
                 onPress={() => changeStatus(status)}
             >
-
                 <Text style={styles.buttonText}>
                     {status}
                 </Text>
-
             </TouchableOpacity>
         )
     }
 
     return (
         <View style={{ flex: 1, backgroundColor: colors.background }}>
-            <Header
-                title="Detalle del Reporte"
-                showBack
-            />
-
             <ScrollView contentContainerStyle={styles.container}>
-
                 <Text style={[styles.title, { color: colors.text }]}>
                     {currentReport.title}
                 </Text>
 
                 {reportImage && (
+
                     <Image
                         source={{ uri: reportImage }}
                         style={styles.image}
                     />
+
                 )}
 
                 <Text style={{ color: colors.text }}>

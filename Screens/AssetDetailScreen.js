@@ -9,6 +9,8 @@ export default function AssetDetailScreen({ route }) {
     const { asset } = route.params
 
     const reports = useSelector(state => state.reports)
+    const userId = useSelector(state => state.auth.user?.localId)
+
     const [reportImage, setReportImage] = useState(null)
 
     const assetReports = reports.filter(
@@ -25,7 +27,7 @@ export default function AssetDetailScreen({ route }) {
 
             try {
                 const response = await fetch(
-                    `${FIREBASE_DB_URL}reportPictures/${latestReport.id}.json`
+                    `${FIREBASE_DB_URL}reportPictures/${userId}/${latestReport.firebaseKey}.json`
                 )
 
                 const data = await response.json()
@@ -38,7 +40,7 @@ export default function AssetDetailScreen({ route }) {
             }
         }
         loadImage()
-    }, [reports])
+    }, [reports, userId])
 
     return (
         <ScrollView

@@ -6,7 +6,9 @@ import { FIREBASE_DB_URL } from "../firebase/database"
 
 export default function AssetCard({ asset, onPress }) {
     const { colors } = useTheme()
+
     const reports = useSelector(state => state.reports)
+    const userId = useSelector(state => state.auth.user?.localId)
 
     const [reportImage, setReportImage] = useState(null)
 
@@ -20,14 +22,13 @@ export default function AssetCard({ asset, onPress }) {
 
     useEffect(() => {
         const loadImage = async () => {
-
             if (!latestReport) {
                 setReportImage(null)
                 return
             }
 
             try {
-                const url = `${FIREBASE_DB_URL}reportPictures/${latestReport.id}.json`
+                const url = `${FIREBASE_DB_URL}reportPictures/${userId}/${latestReport.firebaseKey}.json`
                 const response = await fetch(url)
                 const data = await response.json()
 
@@ -42,7 +43,7 @@ export default function AssetCard({ asset, onPress }) {
             }
         }
         loadImage()
-    }, [reports])
+    }, [reports, userId])
 
     return (
         <TouchableOpacity
@@ -56,7 +57,6 @@ export default function AssetCard({ asset, onPress }) {
             activeOpacity={0.9}
             onPress={onPress}
         >
-
             <Image
                 source={{
                     uri: reportImage ? reportImage : asset.thumbnail
@@ -65,7 +65,6 @@ export default function AssetCard({ asset, onPress }) {
             />
 
             <View style={styles.info}>
-
                 <Text style={[styles.title, { color: colors.text }]}>
                     {asset.title}
                 </Text>
@@ -73,7 +72,6 @@ export default function AssetCard({ asset, onPress }) {
                 <Text style={[styles.brand, { color: colors.text + "99" }]}>
                     {asset.brand}
                 </Text>
-
             </View>
         </TouchableOpacity>
     )

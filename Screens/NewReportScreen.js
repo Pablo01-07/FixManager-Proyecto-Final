@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Image, ScrollView } from "react-native"
 import { useTheme } from "@react-navigation/native"
+import { useSelector } from "react-redux"
 import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system/legacy"
 import { Picker } from "@react-native-picker/picker"
@@ -10,9 +11,10 @@ import { useGetCategoriesQuery, useGetAssetsQuery, useGetReportsQuery, useAddAss
 
 export default function NewReportScreen({ navigation }) {
     const { colors } = useTheme()
+    const userId = useSelector(state => state.auth.user?.localId)
 
     const { data: assets = [] } = useGetAssetsQuery()
-    const { data: reports = [] } = useGetReportsQuery()
+    const { data: reports = [] } = useGetReportsQuery(userId)
     const { data: categories = [], isLoading } = useGetCategoriesQuery()
 
     const [addAssetFirebase] = useAddAssetMutation()
@@ -42,25 +44,17 @@ export default function NewReportScreen({ navigation }) {
     }, [categories])
 
     const pickImage = async () => {
-        console.log("OPENING GALLERY")
-
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 1
         })
 
         if (!result.canceled) {
-
-            console.log("IMAGE SELECTED:", result.assets[0].uri)
-
             setImage(result.assets[0].uri)
-
         }
     }
 
     const takePhoto = async () => {
-        console.log("OPENING CAMERA")
-
         const permission = await ImagePicker.requestCameraPermissionsAsync()
 
         if (!permission.granted) {
@@ -73,9 +67,6 @@ export default function NewReportScreen({ navigation }) {
         })
 
         if (!result.canceled) {
-
-            console.log("PHOTO TAKEN:", result.assets[0].uri)
-
             setImage(result.assets[0].uri)
         }
     }
@@ -83,13 +74,9 @@ export default function NewReportScreen({ navigation }) {
     const convertToBase64 = async (uri) => {
         try {
 
-            console.log("CONVERTING IMAGE TO BASE64")
-
             const base64 = await FileSystem.readAsStringAsync(uri, {
                 encoding: FileSystem.EncodingType.Base64
             })
-
-            console.log("BASE64 GENERATED")
             return base64
 
         } catch (error) {
@@ -98,14 +85,11 @@ export default function NewReportScreen({ navigation }) {
         }
     }
 
-    const saveReportPicture = async (base64Image, reportId) => {
+    const saveReportPicture = async (base64Image, userId, reportFirebaseKey) => {
         try {
-            const url = `${FIREBASE_DB_URL}reportPictures/${reportId}.json`
+            const url = `${FIREBASE_DB_URL}reportPictures/${userId}/${reportFirebaseKey}.json`
 
-            console.log("SAVING REPORT IMAGE IN FIREBASE")
-            console.log("URL:", url)
-
-            const response = await fetch(url, {
+            await fetch(url, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -114,9 +98,6 @@ export default function NewReportScreen({ navigation }) {
                     image: base64Image
                 })
             })
-
-            const data = await response.json()
-            console.log("REPORT IMAGE SAVED:", data)
         } catch (error) {
             console.log("ERROR SAVING REPORT IMAGE:", error)
         }
@@ -153,16 +134,13 @@ export default function NewReportScreen({ navigation }) {
         }
 
         try {
-            console.log("CREATING ASSET")
             const assetResponse = await addAssetFirebase(newAsset).unwrap()
-
             const assetFirebaseKey = assetResponse.name
-            console.log("ASSET CREATED:", assetFirebaseKey)
 
             const newReport = {
                 id: newReportId,
                 assetId: newAssetId,
-                assetFirebaseKey: assetFirebaseKey,
+                assetFirebaseKey,
                 title,
                 brand,
                 description,
@@ -178,19 +156,19 @@ export default function NewReportScreen({ navigation }) {
                 date: new Date().toISOString()
             }
 
-            console.log("CREATING REPORT")
+            const reportResponse = await addReportFirebase({
+                userId,
+                newReport
+            }).unwrap()
 
-            await addReportFirebase(newReport).unwrap()
-
-            console.log("REPORT CREATED")
+            const reportFirebaseKey = reportResponse.name
 
             if (base64Image) {
-                await saveReportPicture(base64Image, newReportId)
+                await saveReportPicture(base64Image, userId, reportFirebaseKey)
             }
 
             Alert.alert("Reporte creado correctamente")
             navigation.goBack()
-
         } catch (error) {
             console.log("ERROR:", error)
             Alert.alert("Error al guardar en Firebase")
@@ -285,13 +263,17 @@ export default function NewReportScreen({ navigation }) {
                 ]}
                 dropdownIconColor={colors.text}
             >
+
                 {categories.map(cat => (
+
                     <Picker.Item
                         key={cat.id}
                         label={cat.title}
                         value={cat.title}
                     />
+
                 ))}
+
             </Picker>
 
             <Text style={{ color: colors.text }}>Estado del Asset</Text>
@@ -309,13 +291,17 @@ export default function NewReportScreen({ navigation }) {
                 ]}
                 dropdownIconColor={colors.text}
             >
+
                 {assetStatuses.map(status => (
+
                     <Picker.Item
                         key={status}
                         label={status}
                         value={status}
                     />
+
                 ))}
+
             </Picker>
 
             <Text style={{ color: colors.text }}>Ubicación</Text>
@@ -334,7 +320,6 @@ export default function NewReportScreen({ navigation }) {
             />
 
             <View style={styles.imageButtons}>
-
                 <TouchableOpacity
                     style={[
                         styles.imageButton,
@@ -345,17 +330,13 @@ export default function NewReportScreen({ navigation }) {
                     ]}
                     onPress={pickImage}
                 >
-
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-
                         <Ionicons name="images-outline" size={20} color={colors.text} />
 
                         <Text style={{ color: colors.text }}>
                             Galería
                         </Text>
-
                     </View>
-
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -368,19 +349,14 @@ export default function NewReportScreen({ navigation }) {
                     ]}
                     onPress={takePhoto}
                 >
-
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-
                         <Ionicons name="camera-outline" size={20} color={colors.text} />
 
                         <Text style={{ color: colors.text }}>
                             Cámara
                         </Text>
-
                     </View>
-
                 </TouchableOpacity>
-
             </View>
 
             {image && (

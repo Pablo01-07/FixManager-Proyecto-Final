@@ -39,8 +39,8 @@ export const firebaseApi = createApi({
         }),
 
         addReport: builder.mutation({
-            query: (newReport) => ({
-                url: "reports.json",
+            query: ({ userId, newReport }) => ({
+                url: `reports/${userId}.json`,
                 method: "POST",
                 body: newReport
             }),
@@ -48,8 +48,8 @@ export const firebaseApi = createApi({
         }),
 
         updateReport: builder.mutation({
-            query: ({ firebaseKey, updatedData }) => ({
-                url: `reports/${firebaseKey}.json`,
+            query: ({ userId, firebaseKey, updatedData }) => ({
+                url: `reports/${userId}/${firebaseKey}.json`,
                 method: "PATCH",
                 body: updatedData
             }),
@@ -57,7 +57,7 @@ export const firebaseApi = createApi({
         }),
 
         getReports: builder.query({
-            query: () => "reports.json",
+            query: (userId) => `reports/${userId}.json`,
             transformResponse: (response) =>
                 response
                     ? Object.entries(response).map(([key, value]) => ({
@@ -69,8 +69,8 @@ export const firebaseApi = createApi({
         }),
 
         deleteReport: builder.mutation({
-            query: (firebaseKey) => ({
-                url: `reports/${firebaseKey}.json`,
+            query: ({ userId, firebaseKey }) => ({
+                url: `reports/${userId}/${firebaseKey}.json`,
                 method: "DELETE"
             }),
             invalidatesTags: ["Reports"]
@@ -97,4 +97,4 @@ export const {
     useUpdateReportMutation,
     useDeleteReportMutation,
     useDeleteAssetMutation
-} = firebaseApi;
+} = firebaseApi

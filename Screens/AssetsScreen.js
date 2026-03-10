@@ -11,12 +11,13 @@ import { Ionicons } from "@expo/vector-icons"
 
 export default function AssetsScreen({ route, navigation }) {
     const { colors } = useTheme()
-    const categoryTitle = route?.params?.categoryTitle
-
     const dispatch = useDispatch()
 
+    const categoryTitle = route?.params?.categoryTitle
+    const userId = useSelector(state => state.auth.user?.localId)
+
     const { data: assetsData = [], isLoading, error } = useGetAssetsQuery()
-    const { data: reportsData = [] } = useGetReportsQuery()
+    const { data: reportsData = [] } = useGetReportsQuery(userId)
 
     const allAssets = useSelector(state => state.assets)
     const [search, setSearch] = useState("")
@@ -29,12 +30,13 @@ export default function AssetsScreen({ route, navigation }) {
         if (reportsData.length > 0) {
             dispatch(setReports(reportsData))
         }
-
     }, [assetsData, reportsData, dispatch])
 
     const filteredByCategory = categoryTitle
         ? allAssets.filter(
-            item => item.category?.toLowerCase() === categoryTitle.toLowerCase()
+            item =>
+                item.category?.toLowerCase() ===
+                categoryTitle.toLowerCase()
         )
         : allAssets
 
@@ -45,7 +47,12 @@ export default function AssetsScreen({ route, navigation }) {
 
     if (isLoading) {
         return (
-            <View style={[styles.container, { backgroundColor: colors.background }]}>
+            <View
+                style={[
+                    styles.container,
+                    { backgroundColor: colors.background }
+                ]}
+            >
                 <Text style={{ color: colors.text }}>
                     Cargando activos...
                 </Text>
@@ -55,7 +62,12 @@ export default function AssetsScreen({ route, navigation }) {
 
     if (error) {
         return (
-            <View style={[styles.container, { backgroundColor: colors.background }]}>
+            <View
+                style={[
+                    styles.container,
+                    { backgroundColor: colors.background }
+                ]}
+            >
                 <Text style={{ color: colors.text }}>
                     Error al cargar los activos
                 </Text>
@@ -64,7 +76,12 @@ export default function AssetsScreen({ route, navigation }) {
     }
 
     return (
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View
+            style={[
+                styles.container,
+                { backgroundColor: colors.background }
+            ]}
+        >
             <Search
                 value={search}
                 onChangeText={setSearch}
@@ -85,9 +102,14 @@ export default function AssetsScreen({ route, navigation }) {
                         }
                     />
                 )}
+                initialNumToRender={5}
+                maxToRenderPerBatch={5}
+                windowSize={5}
+                removeClippedSubviews={true}
             />
 
             {!categoryTitle && (
+
                 <TouchableOpacity
                     style={[
                         styles.fab,
@@ -95,8 +117,11 @@ export default function AssetsScreen({ route, navigation }) {
                     ]}
                     onPress={() => navigation.navigate("NewReport")}
                 >
+
                     <Ionicons name="add" size={28} color="#fff" />
+
                 </TouchableOpacity>
+
             )}
         </View>
     )
