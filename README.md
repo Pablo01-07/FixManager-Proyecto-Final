@@ -48,13 +48,13 @@ La aplicación permite visualizar equipos, crear reportes de fallas con imágene
 ## ⚙️ Instalación y ejecución
 
 1. Clonar el repositorio
-git clone https://github.com/Pablo01-07/FixManager-Proyecto-Final.git
+```git clone https://github.com/Pablo01-07/FixManager-Proyecto-Final.git```
 2. Entrar al proyecto
-cd fixmanager
+```cd fixmanager```
 3. Instalar dependencias
-npm install
+```npm install```
 3. Instalar dependencias
-npx expo start
+```npx expo start```
 
 Luego podrás ejecutar la aplicación en:
 
