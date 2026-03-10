@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { useGetReportsQuery } from "../services/firebaseApi"
 import { setFilter } from "../store/slices/filtersSlice"
 import ReportCard from "../Components/ReportCard"
-import Header from "../Components/Header"
 
 export default function ReportsScreen() {
     const { colors } = useTheme()

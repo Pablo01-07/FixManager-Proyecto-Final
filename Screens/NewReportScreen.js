@@ -73,7 +73,6 @@ export default function NewReportScreen({ navigation }) {
 
     const convertToBase64 = async (uri) => {
         try {
-
             const base64 = await FileSystem.readAsStringAsync(uri, {
                 encoding: FileSystem.EncodingType.Base64
             })
@@ -88,7 +87,7 @@ export default function NewReportScreen({ navigation }) {
     const saveReportPicture = async (base64Image, userId, reportFirebaseKey) => {
         try {
             const url = `${FIREBASE_DB_URL}reportPictures/${userId}/${reportFirebaseKey}.json`
-
+            
             await fetch(url, {
                 method: "PUT",
                 headers: {
@@ -166,7 +165,6 @@ export default function NewReportScreen({ navigation }) {
             if (base64Image) {
                 await saveReportPicture(base64Image, userId, reportFirebaseKey)
             }
-
             Alert.alert("Reporte creado correctamente")
             navigation.goBack()
         } catch (error) {
@@ -291,15 +289,12 @@ export default function NewReportScreen({ navigation }) {
                 ]}
                 dropdownIconColor={colors.text}
             >
-
                 {assetStatuses.map(status => (
-
                     <Picker.Item
                         key={status}
                         label={status}
                         value={status}
                     />
-
                 ))}
 
             </Picker>

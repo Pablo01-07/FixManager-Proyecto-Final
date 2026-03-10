@@ -121,7 +121,6 @@ export default function AssetsScreen({ route, navigation }) {
                     <Ionicons name="add" size={28} color="#fff" />
 
                 </TouchableOpacity>
-
             )}
         </View>
     )

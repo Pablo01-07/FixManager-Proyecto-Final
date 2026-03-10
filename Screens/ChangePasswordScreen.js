@@ -56,15 +56,11 @@ export default function ChangePasswordScreen() {
             )
 
             console.log("RESPONSE STATUS:", response.status)
-
             const data = await response.json()
-
             console.log("FIREBASE RESPONSE:", data)
 
             if (data.error) {
-
                 console.log("FIREBASE ERROR:", data.error.message)
-
                 Alert.alert("Error", data.error.message)
                 return
             }
@@ -75,10 +71,8 @@ export default function ChangePasswordScreen() {
                 "Éxito",
                 "Tu contraseña fue actualizada"
             )
-
             setPassword("")
             setConfirmPassword("")
-
         } catch (error) {
             console.log("CHANGE PASSWORD ERROR:", error)
             Alert.alert(

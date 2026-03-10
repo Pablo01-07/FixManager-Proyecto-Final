@@ -24,21 +24,17 @@ export default function LoginScreen({ navigation }) {
 
     const loadUserTheme = async (email) => {
         try {
-
             console.log("Loading theme for:", email)
             const savedTheme = await AsyncStorage.getItem(`theme_${email}`)
             console.log("Theme in storage:", savedTheme)
 
             if (savedTheme !== null) {
                 const parsedTheme = JSON.parse(savedTheme)
-
                 console.log("Applying theme:", parsedTheme)
-
                 dispatch(setDarkMode(parsedTheme))
             } else {
                 console.log("No theme saved for user")
             }
-
         } catch (error) {
             console.log("Error loading theme:", error)
         }
